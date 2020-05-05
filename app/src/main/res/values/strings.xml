@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Homeschoolr</string>
+    <string name="welcomeText">Welcome to Homeschoolr</string>
+    <string name="googleSignInButton">Sign into Google</string>
+</resources>
