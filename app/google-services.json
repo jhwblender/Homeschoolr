@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "728144443952",
+    "firebase_url": "https://homeschoolr.firebaseio.com",
+    "project_id": "homeschoolr",
+    "storage_bucket": "homeschoolr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728144443952:android:6d13b193bfc2eda7738bf5",
+        "android_client_info": {
+          "package_name": "com.EventHorizon.homeschoolr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728144443952-43hcgvok3vm2rtimugs3lipstf40u5ui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.EventHorizon.homeschoolr",
+            "certificate_hash": "8e99a9eac7e7c8988184b777a38e511a2f895936"
+          }
+        },
+        {
+          "client_id": "728144443952-nhj7vhkoidaoa8t55f46r84g0onq5p6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMTL5qB0YgxRsUQIn5O7eIT4k4FuDMh_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728144443952-59mh7h4h2vl6680d1ng8klb597dfuuhj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

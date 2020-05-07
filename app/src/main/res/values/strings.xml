@@ -1,5 +1,20 @@
 <resources>
     <string name="app_name">Homeschoolr</string>
-    <string name="welcomeText">Welcome to Homeschoolr</string>
-    <string name="googleSignInButton">Sign into Google</string>
+    <!-- LoginActivity -->
+    <string name="textWelcome">Welcome to Homeschoolr</string>
+    <string name="googleLoginButton">Login using Google</string>
+    <!-- RegisterActivity -->
+    <string name="googleRegisterButton">Register using Google</string>
+    <string name="textRegister">Register</string>
+    <string name="textPassword">Password: </string>
+    <string name="textFamilyID">Family ID</string>
+    <string name="textOptional">Optional</string>
+    <string name="textAmLearner">I am a learner</string>
+    <string name="textAmParent">I am a parent</string>
+    <!-- SettingsActivity -->
+    <string name="textSettings">Settings</string>
+    <string name="textAccountSettings">Account Settings</string>
+    <string name="textLogout">Log Out</string>
+    <string name="textName">Name: </string>
+    <string name="textEmail">Email: </string>
 </resources>
