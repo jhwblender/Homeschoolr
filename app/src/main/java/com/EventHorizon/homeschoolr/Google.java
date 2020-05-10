@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -63,7 +64,7 @@ public class Google {
         }
     }
 
-    boolean handleSignInResult(Intent data) {
+    boolean handleSignInResult(Intent data, Context context) {
         Task<GoogleSignInAccount> completedTask = GoogleSignIn.getSignedInAccountFromIntent(data);
         try {
             account = completedTask.getResult(ApiException.class);
@@ -71,9 +72,9 @@ public class Google {
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("Google", "signInResult:failed code=" + e.getStatusCode());
+            String message = GoogleSignInStatusCodes.getStatusCodeString(e.getStatusCode());
+            Log.w("Google", message);
+            PopupMessage.showMessage(message,context,true);
             return false;
         }
     }

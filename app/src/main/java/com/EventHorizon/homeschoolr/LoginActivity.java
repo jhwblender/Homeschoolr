@@ -53,16 +53,15 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
 
         // result from google sign in request
         if (requestCode == 1) {
-            if (google.handleSignInResult(data)) { //login successful
+            if (google.handleSignInResult(data, this)) { //login successful
                 database.checkEmail(google.getEmail(), this); //email in database
-            }else{
-                //todo send message to user that there was a login problem
             }
         }
     }
 
     //Database returned something
     public void onDatabaseResult(DatabaseTask taskName, Task<DocumentSnapshot> task){
+        loadingSymbol.setVisibility(View.INVISIBLE);
         if(taskName == DatabaseTask.CHECK_EMAIL)
             try {
                 if (database.checkEmail(task))
@@ -72,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
                 }
             }catch(Exception e){
                 Log.e("LoginActivity",e.toString());
-                //todo send message to user that there was a database problem
+                PopupMessage.showMessage(e.toString(), this, true);
             }
     }
 
