@@ -1,0 +1,8 @@
+package com.EventHorizon.homeschoolr;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+public interface DatabaseListener {
+    public void onDatabaseResult(DatabaseTask taskName, Task<DocumentSnapshot> task);
+}

@@ -2,7 +2,7 @@
     <string name="app_name">Homeschoolr</string>
     <!-- LoginActivity -->
     <string name="textWelcome">Welcome to Homeschoolr</string>
-    <string name="googleLoginButton">Login using Google</string>
+    <string name="googleLoginButton">Login</string>
     <!-- RegisterActivity -->
     <string name="googleRegisterButton">Register using Google</string>
     <string name="textRegister">Register</string>
@@ -11,6 +11,7 @@
     <string name="textOptional">Optional</string>
     <string name="textAmLearner">I am a learner</string>
     <string name="textAmParent">I am a parent</string>
+    <string name="joiningFamily">I am joining a family</string>
     <!-- SettingsActivity -->
     <string name="textSettings">Settings</string>
     <string name="textAccountSettings">Account Settings</string>

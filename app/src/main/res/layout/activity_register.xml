@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loadingSymbol2" />
+        app:layout_constraintTop_toBottomOf="@+id/loadingSymbol" />
 
     <TextView
         android:id="@+id/RegisterText"
@@ -29,13 +29,13 @@
         android:gravity="center|center_vertical"
         android:text="@string/textRegister"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/switch1"
+        app:layout_constraintBottom_toTopOf="@+id/joiningFamilySwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
-        android:id="@+id/loadingSymbol2"
+        android:id="@+id/loadingSymbol"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,18 +45,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Switch
+        android:id="@+id/joiningFamilySwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:checked="true"
+        android:onClick="joiningFamilySwitched"
+        android:switchPadding="15sp"
+        android:text="@string/joiningFamily"
+        android:textColor="#CCCCCC"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/familyIDRow"
+        app:layout_constraintStart_toStartOf="@+id/familyIDRow" />
+
+    <Switch
+        android:id="@+id/amParentSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:checked="true"
+        android:onClick="amParentSwitched"
+        android:switchPadding="15sp"
+        android:textColor="#CCCCCC"
+        android:textColorHighlight="#CCCCCC"
+        android:textColorLink="#CCCCCC"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/joiningFamilySwitch"
+        app:layout_constraintStart_toStartOf="@+id/joiningFamilySwitch"
+        tools:text="@string/textAmParent" />
+
     <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="0dp"
+        android:id="@+id/familyIDRow"
+        android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/registerButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
@@ -67,14 +92,9 @@
             android:text="@string/textFamilyID"
             android:textSize="24sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
         <EditText
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
+            android:id="@+id/familyID"
+            android:layout_width="150sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15sp"
             android:layout_marginRight="15sp"
@@ -82,23 +102,9 @@
             android:ems="10"
             android:hint="@string/textOptional"
             android:inputType="number"
+            android:maxLength="4"
             android:textSize="18sp" />
 
     </TableRow>
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:checked="true"
-        android:switchPadding="15sp"
-        android:textColor="#CCCCCC"
-        android:textOff="@string/textAmLearner"
-        android:textOn="@string/textAmParent"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/tableRow2"
-        app:layout_constraintStart_toStartOf="@+id/tableRow2"
-        tools:text="@string/textAmParent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

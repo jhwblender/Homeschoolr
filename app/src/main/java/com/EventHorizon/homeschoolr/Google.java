@@ -3,10 +3,8 @@ package com.EventHorizon.homeschoolr;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -17,18 +15,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
 
 public class Google {
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions googleSignIn;
     private GoogleSignInAccount account;
-    boolean isLoggedIn = false;
     Activity activity;
 
-    Google(Context context){isLoggedIn(context);}
+    Google(Context context){
+        isSignedIn(context);}
 
-    boolean isLoggedIn(Context context){
+    boolean isSignedIn(Context context){
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         account = GoogleSignIn.getLastSignedInAccount(context);
@@ -52,16 +49,18 @@ public class Google {
         activity.startActivityForResult(signInIntent, 1);
     }
 
-    void signOut(final Activity activity) {
-        init(activity);
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent intent = new Intent(activity, LoginActivity.class);
-                        activity.startActivity(intent);
-                    }
-                });
+    void signOut(final Activity activity, final Class goTo) {
+        if(isSignedIn(activity)) {
+            init(activity);
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent intent = new Intent(activity, goTo);
+                            activity.startActivity(intent);
+                        }
+                    });
+        }
     }
 
     boolean handleSignInResult(Intent data) {

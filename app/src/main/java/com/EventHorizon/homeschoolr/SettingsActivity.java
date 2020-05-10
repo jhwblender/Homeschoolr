@@ -26,6 +26,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     //Logout button clicked
     public void logout(View view){
-        google.signOut(this);
+        google.signOut(this, LoginActivity.class);
     }
 }
