@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -12,7 +11,7 @@ import android.widget.ProgressBar;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-public class LoginActivity extends AppCompatActivity implements DatabaseListener {
+public class LoginActivity extends AppCompatActivity implements DatabaseListener{
     Google google;
     Database database;
     Button signInButton;
@@ -33,8 +32,11 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         loadingSymbol = findViewById(R.id.loadingSymbol);
 
         super.onStart();
+        Functions.loadingView(true,this);
         if(google.isSignedIn(this))
             database.checkEmail(google.getEmail(),this);
+        else
+            Functions.loadingView(false,this);
     }
 
     @Override
@@ -42,13 +44,14 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
 
     //Google sign in button clicked
     public void googleSignIn(View view){
-        loadingSymbol.setVisibility(View.VISIBLE);
+        Functions.loadingView(true,this);
         google.signIn(this);
     }
 
     //What the google thing returns
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Functions.loadingView(false,this);
         super.onActivityResult(requestCode, resultCode, data);
 
         // result from google sign in request
@@ -60,28 +63,18 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
     }
 
     //Database returned something
-    public void onDatabaseResult(DatabaseTask taskName, Task<DocumentSnapshot> task){
-        loadingSymbol.setVisibility(View.INVISIBLE);
-        if(taskName == DatabaseTask.CHECK_EMAIL)
-            try {
-                if (database.checkEmail(task))
-                    startSettingsActivity();
-                else {
-                    startRegisterActivity(signInButton);
-                }
-            }catch(Exception e){
-                Log.e("LoginActivity",e.toString());
-                PopupMessage.showMessage(e.toString(), this, true);
+    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){}
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){
+        Functions.loadingView(false,this);
+        if(taskName == DatabaseTask.CHECK_EMAIL_EXISTS)
+            if (database.checkEmail(task, this))
+                Functions.goToActivity(SettingsActivity.class, this);
+            else {
+                Functions.goToActivity(RegisterActivity.class, this);
             }
     }
 
-    private void startSettingsActivity(){
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void startRegisterActivity(View view){
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+    public void registerButtonClicked(View view){
+        Functions.goToActivity(RegisterActivity.class, this);
     }
 }

@@ -57,8 +57,10 @@ public class Google {
                     .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Intent intent = new Intent(activity, goTo);
-                            activity.startActivity(intent);
+                            if(goTo != null) {
+                                Intent intent = new Intent(activity, goTo);
+                                activity.startActivity(intent);
+                            }
                         }
                     });
         }
@@ -74,7 +76,7 @@ public class Google {
         } catch (ApiException e) {
             String message = GoogleSignInStatusCodes.getStatusCodeString(e.getStatusCode());
             Log.w("Google", message);
-            PopupMessage.showMessage(message,context,true);
+            Functions.showMessage(message,context,true);
             return false;
         }
     }

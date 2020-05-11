@@ -18,11 +18,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         google = new Google(this);
 
-        nameView = findViewById(R.id.name);
+        nameView = findViewById(R.id.nameView);
         nameView.setText("Email: "+google.getEmail());
         emailView = findViewById(R.id.email);
         emailView.setText("Name: "+google.getGivenName());
     }
+
+    //todo add delete account
+    //todo add name pulled from database
 
     //Logout button clicked
     public void logout(View view){

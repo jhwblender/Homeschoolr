@@ -1,21 +1,27 @@
 <resources>
     <string name="app_name">Homeschoolr</string>
     <!-- LoginActivity -->
-    <string name="textWelcome">Welcome to Homeschoolr</string>
+    <string name="welcomeMessage">Welcome to Homeschoolr</string>
     <string name="googleLoginButton">Login</string>
     <!-- RegisterActivity -->
     <string name="googleRegisterButton">Register using Google</string>
-    <string name="textRegister">Register</string>
-    <string name="textPassword">Password: </string>
-    <string name="textFamilyID">Family ID</string>
-    <string name="textOptional">Optional</string>
-    <string name="textAmLearner">I am a learner</string>
-    <string name="textAmParent">I am a parent</string>
+    <string name="register">Register</string>
+    <string name="password">Password: </string>
+    <string name="familyID">Family ID</string>
+    <string name="optional">Optional</string>
+    <string name="amLearner">I am a learner</string>
+    <string name="amParent">I am a parent</string>
     <string name="joiningFamily">I am joining a family</string>
+    <string name="emailExists">This email is already registered:\nLogging in...</string>
+    <string name="familyIDExists">sorry, this family ID is already taken</string>
+    <string name="familyIDError">Family ID expecting at least 1 character</string>
+    <string name="empty"> </string>
     <!-- SettingsActivity -->
-    <string name="textSettings">Settings</string>
-    <string name="textAccountSettings">Account Settings</string>
-    <string name="textLogout">Log Out</string>
-    <string name="textName">Name: </string>
-    <string name="textEmail">Email: </string>
+    <string name="settings">Settings</string>
+    <string name="accountSettings">Account Settings</string>
+    <string name="signOut">Sign out</string>
+    <string name="deleteAccount">Delete account</string>
+    <string name="name">Name: </string>
+    <string name="change">Change</string>
+    <string name="email">Email: </string>
 </resources>

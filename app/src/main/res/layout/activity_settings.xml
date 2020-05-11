@@ -19,18 +19,9 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/textSettings"
+            android:text="@string/settings"
             android:textSize="36sp" />
     </TableRow>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -45,6 +36,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <View
+                android:id="@+id/dividerAccountSettings"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <TableRow
                 android:id="@+id/AccountSettings"
                 android:layout_width="wrap_content"
@@ -56,7 +53,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/textAccountSettings"
+                    android:text="@string/accountSettings"
                     android:textSize="24sp" />
             </TableRow>
 
@@ -66,10 +63,19 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/nameView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/textName" />
+                    android:layout_weight="1"
+                    android:text="@string/name"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/changeNameButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:text="@string/change" />
+
             </TableRow>
 
             <TableRow
@@ -81,20 +87,44 @@
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/textEmail" />
+                    android:layout_weight="1"
+                    android:text="@string/email"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/changeEmailButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:text="@string/change"
+                    android:visibility="invisible" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/LogOut"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/signOutButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="logout"
-                    android:text="@string/textLogout" />
+                    android:text="@string/signOut" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/deleteAccountButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34sp"
+                    android:onClick="logout"
+                    android:text="@string/deleteAccount"
+                    android:textColor="#FF0000"
+                    android:textSize="12sp" />
             </TableRow>
 
             <View

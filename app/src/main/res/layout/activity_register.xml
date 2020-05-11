@@ -2,8 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="false"
+    android:focusable="auto"
     tools:context=".RegisterActivity">
 
     <Button
@@ -20,14 +23,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loadingSymbol" />
+        app:layout_constraintTop_toBottomOf="@+id/loadingSymbol"
+        app:layout_constraintVertical_bias="0.74" />
 
     <TextView
         android:id="@+id/RegisterText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center|center_vertical"
-        android:text="@string/textRegister"
+        android:text="@string/register"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/joiningFamilySwitch"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,20 +50,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/joiningFamilySwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:checked="true"
-        android:onClick="joiningFamilySwitched"
-        android:switchPadding="15sp"
-        android:text="@string/joiningFamily"
-        android:textColor="#CCCCCC"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/familyIDRow"
-        app:layout_constraintStart_toStartOf="@+id/familyIDRow" />
-
-    <Switch
         android:id="@+id/amParentSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,7 +63,49 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/joiningFamilySwitch"
         app:layout_constraintStart_toStartOf="@+id/joiningFamilySwitch"
-        tools:text="@string/textAmParent" />
+        tools:text="@string/amParent" />
+
+    <Switch
+        android:id="@+id/joiningFamilySwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:checked="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:switchPadding="15sp"
+        android:text="@string/joiningFamily"
+        android:textColor="#CCCCCC"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/familyIDRow"
+        app:layout_constraintStart_toStartOf="@+id/familyIDRow" />
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/amParentSwitch"
+        app:layout_constraintStart_toStartOf="@+id/amParentSwitch">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/name"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/nameView"
+            android:layout_width="150sp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/empty"
+            android:inputType="text"
+            android:textSize="18sp" />
+    </TableRow>
 
     <TableRow
         android:id="@+id/familyIDRow"
@@ -89,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/textFamilyID"
+            android:text="@string/familyID"
             android:textSize="24sp" />
 
         <EditText
@@ -100,9 +132,8 @@
             android:layout_marginRight="15sp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/textOptional"
-            android:inputType="number"
-            android:maxLength="4"
+            android:hint="@string/empty"
+            android:inputType="text"
             android:textSize="18sp" />
 
     </TableRow>
