@@ -3,7 +3,9 @@ package com.EventHorizon.homeschoolr;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -33,5 +35,19 @@ public class Functions {
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         else
             context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public static boolean checkEmail(String email, Context context){
+        if(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return true;
+        showMessage(context.getString(R.string.badEmailFormat), context, false);
+        return false;
+    }
+    public static boolean checkPassword(String password, Context context){
+        if(password.length() > 6)
+            return true;
+        else
+            showMessage(context.getString(R.string.badPasswordFormat),context,false);
+        return false;
     }
 }

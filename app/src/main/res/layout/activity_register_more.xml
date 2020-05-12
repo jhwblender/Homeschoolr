@@ -2,9 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    android:clickable="false"
+    android:focusable="auto"
+    tools:context=".RegisterMoreActivity">
 
     <ProgressBar
         android:id="@+id/loadingSymbol"
@@ -22,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center|center_vertical"
-        android:text="@string/register"
+        android:text="@string/moreInfo"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/loadingSymbol"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,12 +33,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="292dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,86 +46,82 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15sp">
+            android:layout_marginBottom="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/username"
-                android:textSize="24sp" />
-
-            <Space
-                android:layout_width="15sp"
-                android:layout_height="wrap_content" />
+                android:text="@string/name"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/email"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15sp"
+                android:layout_marginRight="15sp"
                 android:autofillHints=""
                 android:ems="10"
                 android:hint="@string/empty"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:textSize="18sp" />
         </TableRow>
 
+        <Switch
+            android:id="@+id/amParentSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:checked="true"
+            android:onClick="amParentSwitched"
+            android:switchPadding="15sp"
+            android:textColor="#CCCCCC"
+            android:textColorHighlight="#CCCCCC"
+            android:textColorLink="#CCCCCC"
+            android:textSize="18sp"
+            tools:text="@string/amParent" />
+
+        <Switch
+            android:id="@+id/joiningFamilySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:checked="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:switchPadding="15sp"
+            android:text="@string/joiningFamily"
+            android:textColor="#CCCCCC"
+            android:textSize="18sp" />
+
         <TableRow
             android:id="@+id/familyIDRow"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginBottom="15sp">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp">
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/password"
-                android:textSize="24sp" />
-
-            <Space
-                android:layout_width="15sp"
-                android:layout_height="wrap_content" />
+                android:text="@string/familyID"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/password"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15sp"
+                android:layout_marginRight="15sp"
                 android:autofillHints=""
                 android:ems="10"
                 android:hint="@string/empty"
-                android:inputType="textPassword"
-                android:textSize="18sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15sp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/passwordVerify"
-                android:textSize="24sp" />
-
-            <Space
-                android:layout_width="15sp"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/passwordVerify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/empty"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:textSize="18sp" />
 
         </TableRow>
@@ -133,9 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif"
-            android:onClick="register"
-            android:text="@string/register" />
-
+            android:onClick="registerButton"
+            android:text="@string/finishRegistration" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

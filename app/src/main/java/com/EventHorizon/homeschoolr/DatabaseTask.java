@@ -1,7 +1,9 @@
 package com.EventHorizon.homeschoolr;
 
 public enum DatabaseTask {
-    CHECK_EMAIL_EXISTS,
-    CHECK_FAMILY_ID_EXISTS,
-    CHECK_ADD_USER
+    AUTH_LOGIN,
+    AUTH_CREATE_USER,
+    AUTH_DELETE_USER,
+    DATABASE_DELETE_USER,
+    RESET_PASSWORD
 }
