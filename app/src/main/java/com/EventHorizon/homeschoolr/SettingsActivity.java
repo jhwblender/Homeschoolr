@@ -3,16 +3,22 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class SettingsActivity extends AppCompatActivity {
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+public class SettingsActivity extends AppCompatActivity implements DatabaseListener{
     Auth auth;
     TextView emailView;
     TextView nameView;
     String email;
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +53,23 @@ public class SettingsActivity extends AppCompatActivity {
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener(){
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            if(which==DialogInterface.BUTTON_POSITIVE)
+            if(which==DialogInterface.BUTTON_POSITIVE) {
                 //todo delete database account
-                auth.deleteAccount(getApplicationContext());
-            else
+                auth.deleteAccount(context);
+            }else
                 Functions.showMessage(getString(R.string.deleteCancel),getApplicationContext(),false);
         }
     };
+
+    @Override
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task) {}
+
+    @Override
+    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task) {
+        if(taskName == DatabaseTask.AUTH_DELETE_USER)
+            auth.deleteAccount(task, this);
+    }
+
+    @Override
+    public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {}
 }

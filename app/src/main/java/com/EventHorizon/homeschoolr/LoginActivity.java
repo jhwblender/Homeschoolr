@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         setContentView(R.layout.activity_login);
 
         auth = new Auth();
-        database = new Database();
+        database = new Database(this);
     }
 
     @Override
@@ -50,18 +50,17 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         String email = usernameView.getText().toString();
         String password = passwordView.getText().toString();
 
-        if(Functions.checkEmail(getEmail(),this));
-        else if(!password.equals("")) {
-            Functions.loadingView(true, this);
-            auth.signIn(email, password, this);
-        }else
-            Functions.showMessage(getString(R.string.noPasswordEntered), this, true);
+        if(!Functions.checkEmail(email,this));
+        else if(password.length() == 0)
+            Functions.showMessage(getString(R.string.noPasswordEntered),this,true);
+        else
+            auth.signIn(email, password,this);
     }
 
     //Database returned something
     public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
         Functions.loadingView(false, this);
-        if(taskName == DatabaseTask.RESET_PASSWORD)
+        if(taskName == DatabaseTask.AUTH_RESET_PASSWORD)
             auth.resetPassword(task, this);
     }
     public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){}

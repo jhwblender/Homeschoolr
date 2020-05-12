@@ -7,20 +7,57 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Database{
+    String index = "index";
+    String familyIndex = index+"/family";
+    String toDeleteIndex = index+"/toDelete";
+    String userIndex = index+"/user";
+    String user = "user";
+    String family = "family";
+    Context context;
+    Database(Context context){this.context = context;}
+
+    private void loadD(final DatabaseTask taskName, String path){
+        DocumentReference dRef = FirebaseFirestore.getInstance().document(path);
+        final DatabaseListener listener = (DatabaseListener) context;
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                listener.onDatabaseResultR(taskName, task);
+            }
+        });
+    }
+
+    private Object read(Task<DocumentSnapshot> task, String key) throws Exception {
+        if(task.isSuccessful()){
+            try {
+                return task.getResult().get(key);
+            }catch(NullPointerException e){
+                return null;
+            }
+        }else{
+            Log.w("Database",task.getException().getLocalizedMessage());
+            throw new Exception("Database read error");
+        }
+    }
+    private void write(final DatabaseTask taskName, String path){
+
+    }
+
+
+    public void getFamilyID(){
+        loadD(DatabaseTask.DB_GET_FAMILY_ID, familyIndex);}
+    public String getFamilyID(Task<DocumentSnapshot> task, String familyName) throws Exception {
+        return (String)read(task, familyName);}
+
+    public void createUserAndFamily(String name, boolean isParent, boolean joiningFamily){
+
+    }
+
 //    private String userPathPrefix = "users/";
 //    private String familyIDPathPrefix = "family/";
 //    private String familyMembersPathSuffix = "/members";

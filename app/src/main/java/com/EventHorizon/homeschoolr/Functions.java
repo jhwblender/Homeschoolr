@@ -16,7 +16,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 public class Functions {
+
     public static void showMessage(String message, Context context, boolean lengthLong){
+        if(message == null)
+            message = "null";
         int duration = lengthLong? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, message,duration);
         toast.show();

@@ -22,7 +22,7 @@
     <string name="amLearner">I am a learner</string>
     <string name="amParent">I am a parent</string>
     <string name="joiningFamily">I am joining a family</string>
-    <string name="emailExists">This email is already registered:\nLogging in...</string>
+    <string name="emailExists">This email is already registered:\nLogging in…</string>
     <string name="familyIDExists">sorry, this family ID is already taken</string>
     <string name="familyIDError">Family ID expecting at least 1 character</string>
     <string name="nameError">Name expecting at least 1 character</string>
@@ -36,11 +36,11 @@
     <string name="name">Name: </string>
     <string name="change">Change</string>
     <string name="email">Email: </string>
-    <string name="deleteConfirmation">This will delete all data associated with your account\n
-    this is not recoverable.\n\nAre you sure you want to continue?</string>
+    <string name="deleteConfirmation">This will delete all data associated with your account\nthis is not recoverable.\n\nAre you sure you want to continue?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="deleteCancel">Account deletion canceled</string>
     <!--Authentication-->
     <string name="passwordResetGood">Password reset email sending</string>
+    <string name="acctDelSuccessful">"Account deletion Successful"</string>
 </resources>

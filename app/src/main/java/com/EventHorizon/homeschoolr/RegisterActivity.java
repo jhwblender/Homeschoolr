@@ -41,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity implements DatabaseListe
             Functions.showMessage(getString(R.string.passwordNotMatch),this,true);
             return;
         }else {
+            Functions.loadingView(true, this);
             auth.createUser(email, password, this);
         }
     }
@@ -53,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements DatabaseListe
 
     @Override
     public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {
+        Functions.loadingView(false, this);
         if(taskName == DatabaseTask.AUTH_CREATE_USER)
             if(auth.createUser(task, this))
                 Functions.goToActivity(RegisterMoreActivity.class,this);

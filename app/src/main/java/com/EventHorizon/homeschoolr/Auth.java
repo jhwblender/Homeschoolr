@@ -90,9 +90,12 @@ public class Auth {
     public boolean deleteAccount(Task task, Context context){
         if(task.isSuccessful()){
             Log.w("Auth","Deleting Auth Account Successful");
+            Functions.showMessage(context.getString(R.string.acctDelSuccessful),context,true);
+            Functions.goToActivity(LoginActivity.class, context);
             return true;
         }else {
             Log.w("Auth","Deleting Auth Account Failed: " + task.getException().getLocalizedMessage());
+            Functions.showMessage(task.getException().getLocalizedMessage(),context,true);
             return false;
         }
     }
@@ -102,7 +105,7 @@ public class Auth {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                listener.onDatabaseResultW(DatabaseTask.RESET_PASSWORD, task);
+                listener.onDatabaseResultW(DatabaseTask.AUTH_RESET_PASSWORD, task);
             }
         });
     }
