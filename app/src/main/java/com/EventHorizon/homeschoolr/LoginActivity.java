@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class LoginActivity extends AppCompatActivity implements DatabaseListener{
     Auth auth;
     Database database;
+    Functions functions;
     Button signInButton;
     ProgressBar loadingSymbol;
     EditText usernameView;
@@ -26,8 +27,9 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        auth = new Auth();
+        auth = new Auth(this);
         database = new Database(this);
+        functions = new Functions(this);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
 
         super.onStart();
         if (auth.isSignedIn()) {
-            Functions.loadingView(true,this);
+            functions.loadingView(true);
             database.getUserID();
         }
     }
@@ -52,50 +54,50 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         String email = usernameView.getText().toString();
         String password = passwordView.getText().toString();
 
-        if(!Functions.checkEmail(email,this));
+        if(!functions.checkEmail(email));
         else if(password.length() == 0)
-            Functions.showMessage(getString(R.string.noPasswordEntered),this,true);
+            functions.showMessage(getString(R.string.noPasswordEntered),true);
         else
-            auth.signIn(email, password,this);
+            auth.signIn(email, password);
     }
 
     //Database returned something
     public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
-        Functions.loadingView(false, this);
+        functions.loadingView(false);
         if(taskName == DatabaseTask.AUTH_RESET_PASSWORD)
-            auth.resetPassword(task, this);
+            auth.resetPassword(task);
     }
     public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){
-        Functions.loadingView(false, this);
+        functions.loadingView(false);
         try {
             switch(taskName){
                 case DB_GET_USER_ID:
                     if(database.getUserID(task, getEmail()) != null)
-                        Functions.goToActivity(SettingsActivity.class, this);
+                        functions.goToActivity(SettingsActivity.class);
                     else
-                        Functions.goToActivity(RegisterMoreActivity.class, this);
+                        functions.goToActivity(RegisterMoreActivity.class);
                     break;
             }
         }catch(Exception e){
-            Functions.showMessage(e.getLocalizedMessage(), this, true);
+            functions.showMessage(e.getLocalizedMessage(), true);
         }
     }
     public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task){
-        Functions.loadingView(false, this);
+        functions.loadingView(false);
         if(taskName == DatabaseTask.AUTH_LOGIN)
-            if(auth.signIn(task, this)) {
-                Functions.loadingView(true, this);
+            if(auth.signIn(task)) {
+                functions.loadingView(true);
                 database.getUserID();
             }
     }
 
     public void registerButtonClicked(View view){
-        Functions.goToActivity(RegisterActivity.class, this);
+        functions.goToActivity(RegisterActivity.class);
     }
     public void resetPasswordButtonClicked(View view){
-        if(Functions.checkEmail(getEmail(),this)) {
-            Functions.loadingView(true, this);
-            auth.resetPassword(getEmail(),this);
+        if(functions.checkEmail(getEmail())) {
+            functions.loadingView(true);
+            auth.resetPassword(getEmail());
         }
     }
 

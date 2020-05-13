@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 public class SettingsActivity extends AppCompatActivity implements DatabaseListener{
     Auth auth;
+    Functions functions;
     TextView emailView;
     TextView nameView;
     String email;
@@ -25,7 +26,8 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        auth = new Auth();
+        auth = new Auth(this);
+        functions = new Functions(this);
 
         nameView = findViewById(R.id.email);
         nameView.setText("Email: "+email);
@@ -38,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
     //Logout button clicked
     public void logout(View view){
         auth.signOut();
-        Functions.goToActivity(LoginActivity.class,this);
+        functions.goToActivity(LoginActivity.class);
     }
 
     //Delete Account button clicked
@@ -57,7 +59,7 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
                 //todo delete database account
                 auth.deleteAccount(context);
             }else
-                Functions.showMessage(getString(R.string.deleteCancel),getApplicationContext(),false);
+                functions.showMessage(getString(R.string.deleteCancel),false);
         }
     };
 

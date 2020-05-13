@@ -1,5 +1,6 @@
 package com.EventHorizon.homeschoolr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -27,7 +28,11 @@ public class Database{
     String user = "user";
     String family = "family";
     Context context;
-    Database(Context context){this.context = context;}
+    Functions functions;
+    Database(Context context){
+        this.context = context;
+        functions = new Functions((Activity)context);
+    }
 
     private void loadD(final DatabaseTask taskName, String path){
         DocumentReference dRef = FirebaseFirestore.getInstance().document(path);
@@ -79,34 +84,35 @@ public class Database{
 
     public void getUserID(){loadD(DatabaseTask.DB_GET_USER_ID, userIndex);}
     public String getUserID(Task<DocumentSnapshot> task, String email) throws Exception {
-        return (String)read(task, Functions.formatEmail(email));
+        return (String)read(task, functions.formatEmail(email));
     }
 
-    public void createUserAndFamily(String email, String ID, String name, boolean isParent, String familyName){
+    public void createUserAndFamily(String email, String name, boolean isParent, String familyName){
         WriteBatch batch = null;
         Map<String, Object> data = new HashMap<>();
         ArrayList<String> list = new ArrayList<>();
-        //todo write to family
+        String familyID = makeDoc(family);
+        String userID = makeDoc(user);
+        //write to family
         data = new HashMap<>();
         data.put("name",familyName);
-        list.add(ID);
+        list.add(userID);
         data.put("members", list);
         list = new ArrayList<>();
         data.put("invitedMembers", list);
-        String familyID = makeDoc(family);
         batch = write(data, family+"/"+familyID,null);
-        //todo write to user
+        //write to user
         data = new HashMap<>();
         data.put("name",name);
         data.put("isParent",isParent);
         data.put("email",email);
         data.put("familyName",familyName);
-        batch = write(data, user+"/"+ID, batch);
-        //todo write to userIndex
+        batch = write(data, user+"/"+userID, batch);
+        //write to userIndex
         data = new HashMap<>();
-        data.put(Functions.formatEmail(email),ID);
+        data.put(functions.formatEmail(email),userID);
         batch = write(data, userIndex, batch);
-        //todo write to familyIndex
+        //write to familyIndex
         data = new HashMap<>();
         data.put(familyName, familyID);
         batch = write(data, familyIndex, batch);
@@ -116,122 +122,19 @@ public class Database{
     public boolean createUserAndFamily(Task<Void> task){
         if(task.isSuccessful()){
             Log.d("Database",context.getString(R.string.userCreationSuccessful));
-            Functions.showMessage(context.getString(R.string.userCreationSuccessful), context, true);
+            functions.showMessage(context.getString(R.string.userCreationSuccessful), true);
         }else{
             Log.d("Database",task.getException().getMessage());
-            Functions.showMessage(task.getException().getLocalizedMessage(), context, true);
+            functions.showMessage(task.getException().getLocalizedMessage(), true);
         }
         return task.isSuccessful();
     }
 
-//    private String userPathPrefix = "users/";
-//    private String familyIDPathPrefix = "family/";
-//    private String familyMembersPathSuffix = "/members";
-//    //private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("users/");
-//    private FirebaseFirestore database = FirebaseFirestore.getInstance();
-//    WriteBatch writeBatch = database.batch();
-//    Map<String, Object> userDataForDeletion = new HashMap<>();
-//
-//    private void populateUserDataForDeletion(){
-//        userDataForDeletion.put("familyId", FieldValue.delete());
-//        userDataForDeletion.put("isParent", FieldValue.delete());
-//        userDataForDeletion.put("name", FieldValue.delete());
-//    }
-//
-//    private String getUserPath(String email){return "users/"+email;}
-//
-//    private CollectionReference getC(String prefix, String middle, String suffix){
-//        return database.collection(prefix+middle+suffix);
-//    }
-//    private CollectionReference getC(String prefix, String middle){
-//        return database.collection(prefix+middle);
-//    }
-//    private DocumentReference getD(String prefix, String middle, String suffix){
-//        return database.document(prefix+middle+suffix);
-//    }
-//    private DocumentReference getD(String prefix, String middle){
-//        return database.document(prefix+middle);
-//    }
-//
-//    //Asks database to check for email
-//    public void checkEmail(String email, Context context){
-//        final DatabaseListener listener = (DatabaseListener) context;
-//        getD(userPathPrefix,email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                listener.onDatabaseResultR(DatabaseTask.CHECK_EMAIL_EXISTS, task);
-//            }
-//        });
-//    }
-//    //Checks email after result
-//    public boolean checkEmail(Task<DocumentSnapshot> task, Context context){
-//        if(task.isSuccessful()) {
-//            return task.getResult().exists();
-//        }
-//        else {
-//            Log.e("Database",task.getException().toString());
-//            Functions.showMessage(task.getException().toString(), context , true);
-//            return false;
-//        }
-//    }
-//
-//    //Asks database to check for familyID
-//    public void checkFamilyID(String id, Context context){
-//        final DatabaseListener listener = (DatabaseListener) context;
-//        getD(familyIDPathPrefix,id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                listener.onDatabaseResultR(DatabaseTask.CHECK_FAMILY_ID_EXISTS, task);
-//            }
-//        });
-//    }
-//    //Checks familyID after result
-//    public boolean checkFamilyID(Task<DocumentSnapshot> task, Context context){
-//        if(task.isSuccessful()) {
-//            return task.getResult().exists();
-//        }
-//        else {
-//            Log.e("Database",task.getException().toString());
-//            Functions.showMessage(task.getException().toString(), context , true);
-//            return false;
-//        }
-//    }
-//    //Adds user needing a new FamilyID
-//    public void addUser(String email, String name, String familyId, boolean isParent, Context context){
-//        //saving family ID first
-//        Map<String, Object> familyIDSave = new HashMap<String, Object>();
-//        List<String> emails = new ArrayList<>();
-//        emails.add(email);
-//        familyIDSave.put("members",emails);
-//        Map<String, Object> userSave = new HashMap<String, Object>();
-//        userSave.put("email",email);
-//        userSave.put("familyID",familyId);
-//        userSave.put("isParent",isParent);
-//        userSave.put("name",name);
-//        writeBatch.set(getD(familyIDPathPrefix,familyId),familyIDSave);
-//        writeBatch.set(getD(userPathPrefix,email),userSave);
-//        final DatabaseListener listener = (DatabaseListener) context;
-//        writeBatch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-//             @Override
-//             public void onComplete(@NonNull Task<Void> task) {
-//                 listener.onDatabaseResultW(DatabaseTask.CHECK_ADD_USER, task);
-//             }
-//         }
-//        );
-//    }
-//    public boolean addUser(Task<Void> task, Context context){
-//        if(task.isSuccessful()) {
-//            Log.d("LoginActivity", "User Successfully Made!");
-//            Functions.showMessage("Sign up successful!",context, true);
-//            return true;
-//        }
-//        else {
-//            Log.w("LoginActivity", task.getException());
-//            Functions.showMessage(task.getException().toString(), context, true);
-//            return false;
-//        }
-//    }
-//
-//    public void deleteAccount(String email){
-//    }
+    public void deleteAccount(String email){
+        getFamilyID();
+        getUserID();
+    }
+    public void deleteAccount(){
+
+    }
 }

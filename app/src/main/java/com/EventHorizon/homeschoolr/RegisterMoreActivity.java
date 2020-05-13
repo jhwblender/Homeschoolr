@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class RegisterMoreActivity extends AppCompatActivity implements DatabaseListener{
     Auth auth;
     Database database;
+    Functions functions;
 
     ProgressBar loadingSymbol;
     Button registerButton;
@@ -44,14 +45,15 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
         joiningFamilyView = findViewById(R.id.joiningFamilySwitch);
         loadingSymbol = findViewById(R.id.loadingSymbol);
 
-        auth = new Auth();
+        auth = new Auth(this);
         database = new Database(this);
+        functions = new Functions(this);
     }
 
     @Override
     public void onBackPressed(){
         auth.signOut();
-        Functions.goToActivity(LoginActivity.class,this);
+        functions.goToActivity(LoginActivity.class);
     }
 
     //changing text to say if they are a parent or a child
@@ -71,11 +73,11 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     //Check the user has put information in
     public void registerButton(View view){
         if(familyIDView.getText().length() < 1) {
-            Functions.showMessage(getString(R.string.familyIDError), this, true);
+            functions.showMessage(getString(R.string.familyIDError), true);
             return;
         }
         if(nameView.getText().length() < 1){
-            Functions.showMessage(getString(R.string.nameError),this,true);
+            functions.showMessage(getString(R.string.nameError),true);
             return;
         }
         registerUser();
@@ -87,17 +89,17 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
         isParent = isParentView.isChecked();
         joiningFamily = joiningFamilyView.isChecked();
 
-        Functions.loadingView(true, this);
+        functions.loadingView(true);
         database.getFamilyID();
     }
     private void registerUser(String familyID){
         //Log.d("RegisterMoreActivity",familyID);
-        //Functions.showMessage(familyID, this, true);
+        //functions.showMessage(familyID, this, true);
         if(!joiningFamily) { //not joining family
             if (familyID == null)
-                database.createUserAndFamily(auth.getEmail(), auth.getID(), name, isParent, familyName);
+                database.createUserAndFamily(auth.getEmail(), name, isParent, familyName);
             else {
-                Functions.showMessage(getString(R.string.familyIDExists), this, true);
+                functions.showMessage(getString(R.string.familyIDExists), true);
                 return;
             }
         }else{ //joining family
@@ -107,7 +109,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
 
     @Override
     public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task) {
-        Functions.loadingView(false, this);
+        functions.loadingView(false);
         try {
             switch (taskName) {
                 case DB_GET_FAMILY_ID:
@@ -115,17 +117,17 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
                     break;
             }
         }catch(Exception e){
-            Functions.showMessage(e.getLocalizedMessage(), this, true);
+            functions.showMessage(e.getLocalizedMessage(), true);
         }
     }//end onDatabaseResult
 
     @Override
     public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
-        Functions.loadingView(false, this);
+        functions.loadingView(false);
         switch (taskName){
             case DB_CREATE_USER_AND_FAMILY:
                 if(database.createUserAndFamily(task))
-                    Functions.goToActivity(SettingsActivity.class, this);
+                    functions.goToActivity(SettingsActivity.class);
         }
     }
 

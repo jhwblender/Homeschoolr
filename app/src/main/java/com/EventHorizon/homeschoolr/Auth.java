@@ -15,10 +15,14 @@ import com.google.firebase.auth.FirebaseUser;
 public class Auth {
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private Activity context;
+    private Functions functions;
 
-    public Auth(){
+    public Auth(Activity context){
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        this.context = context;
+        functions = new Functions(context);
     }
 
     public boolean isSignedIn(){
@@ -35,7 +39,7 @@ public class Auth {
         return user.getUid();
     }
 
-    public void createUser(final String email, String password, final Activity context){
+    public void createUser(final String email, String password){
         final DatabaseListener listener = (DatabaseListener) context;
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
@@ -45,19 +49,19 @@ public class Auth {
                     }
                 });
     }
-    public boolean createUser(Task<AuthResult> task, Context context){
+    public boolean createUser(Task<AuthResult> task){
         if(task.isSuccessful()){
             Log.d("Auth","User was created successfully");
-            Functions.showMessage("Welcome to Homeschoolr",context,true);
+            functions.showMessage("Welcome to Homeschoolr",true);
             return true;
         }else{
             Log.w("Auth", "Create user failed: "+task.getException().getLocalizedMessage());
-            Functions.showMessage(task.getException().getLocalizedMessage(),context,false);
+            functions.showMessage(task.getException().getLocalizedMessage(),false);
             return false;
         }
     }
 
-    public void signIn(String email, String password, Activity context){
+    public void signIn(String email, String password){
         final DatabaseListener listener = (DatabaseListener) context;
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
@@ -67,14 +71,14 @@ public class Auth {
                     }
                 });
     }
-    public boolean signIn(Task<AuthResult> task, Context context){
+    public boolean signIn(Task<AuthResult> task){
         if(task.isSuccessful()){
             Log.w("Auth",context.getString(R.string.signInSuccessful));
-            Functions.showMessage(context.getString(R.string.signInSuccessful), context, false);
+            functions.showMessage(context.getString(R.string.signInSuccessful), false);
             return true;
         }else {
             Log.w("Auth",task.getException().getLocalizedMessage());
-            Functions.showMessage(task.getException().getLocalizedMessage(), context, false);
+            functions.showMessage(task.getException().getLocalizedMessage(), false);
             return false;
         }
     }
@@ -98,17 +102,17 @@ public class Auth {
     public boolean deleteAccount(Task task, Context context){
         if(task.isSuccessful()){
             Log.w("Auth","Deleting Auth Account Successful");
-            Functions.showMessage(context.getString(R.string.acctDelSuccessful),context,true);
-            Functions.goToActivity(LoginActivity.class, context);
+            functions.showMessage(context.getString(R.string.acctDelSuccessful),true);
+            functions.goToActivity(LoginActivity.class);
             return true;
         }else {
             Log.w("Auth","Deleting Auth Account Failed: " + task.getException().getLocalizedMessage());
-            Functions.showMessage(task.getException().getLocalizedMessage(),context,true);
+            functions.showMessage(task.getException().getLocalizedMessage(),true);
             return false;
         }
     }
 
-    public void resetPassword(String email, final Context context){
+    public void resetPassword(String email){
         final DatabaseListener listener = (DatabaseListener) context;
         auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -117,14 +121,14 @@ public class Auth {
             }
         });
     }
-    public boolean resetPassword(Task<Void> task, Context context){
+    public boolean resetPassword(Task<Void> task){
         if(task.isSuccessful()){
             Log.w("Auth",context.getString(R.string.passwordResetGood));
-            Functions.showMessage(context.getString(R.string.passwordResetGood),context,true);
+            functions.showMessage(context.getString(R.string.passwordResetGood),true);
             return true;
         }else {
             Log.w("Auth",task.getException().getLocalizedMessage());
-            Functions.showMessage(task.getException().getLocalizedMessage(),context,true);
+            functions.showMessage(task.getException().getLocalizedMessage(),true);
             return false;
         }
     }

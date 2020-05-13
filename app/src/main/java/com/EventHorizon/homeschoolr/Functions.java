@@ -16,21 +16,26 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 public class Functions {
+    private Activity context;
 
-    public static void showMessage(String message, Context context, boolean lengthLong){
+    Functions(Activity context){
+        this.context = context;
+    }
+
+    public void showMessage(String message, boolean lengthLong){
         if(message == null)
             message = "null";
         int duration = lengthLong? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, message,duration);
         toast.show();
     }
-    public static void goToActivity(Class activity, Context context){
+    public void goToActivity(Class activity){
         Intent intent = new Intent(context, activity);
         context.startActivity(intent);
     }
 
     //displays loading
-    public static void loadingView(boolean isLoading, Activity context){
+    public void loadingView(boolean isLoading){
         context.findViewById(R.id.loadingSymbol)
                 .setVisibility(isLoading? View.VISIBLE : View.INVISIBLE);
         if(isLoading)
@@ -40,21 +45,21 @@ public class Functions {
             context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public static boolean checkEmail(String email, Context context){
+    public boolean checkEmail(String email){
         if(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return true;
-        showMessage(context.getString(R.string.badEmailFormat), context, false);
+        showMessage(context.getString(R.string.badEmailFormat), false);
         return false;
     }
-    public static String formatEmail(String email){
+    public String formatEmail(String email){
         return email.toLowerCase().replace(".",",");
     }
 
-    public static boolean checkPassword(String password, Context context){
+    public boolean checkPassword(String password){
         if(password.length() > 6)
             return true;
         else
-            showMessage(context.getString(R.string.badPasswordFormat),context,false);
+            showMessage(context.getString(R.string.badPasswordFormat),false);
         return false;
     }
 }
