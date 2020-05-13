@@ -28,6 +28,7 @@
     <string name="nameError">Name expecting at least 1 character</string>
     <string name="empty"> </string>
     <string name="moreInfo">More Info</string>
+    <string name="userCreationSuccessful">User created successfully</string>
     <!-- SettingsActivity -->
     <string name="settings">Settings</string>
     <string name="accountSettings">Account Settings</string>
@@ -41,6 +42,6 @@
     <string name="no">No</string>
     <string name="deleteCancel">Account deletion canceled</string>
     <!--Authentication-->
-    <string name="passwordResetGood">Password reset email sending</string>
+    <string name="passwordResetGood">If this account exists\na password has been sent</string>
     <string name="acctDelSuccessful">"Account deletion Successful"</string>
 </resources>

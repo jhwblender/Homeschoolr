@@ -1,6 +1,7 @@
 package com.EventHorizon.homeschoolr;
 
 import android.content.Context;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firestore.v1.Write;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Database{
     String index = "index";
@@ -44,18 +52,76 @@ public class Database{
             throw new Exception("Database read error");
         }
     }
-    private void write(final DatabaseTask taskName, String path){
 
+    private String makeDoc(String collection){
+        return FirebaseFirestore.getInstance().collection(collection).document().getId();
+    }
+    private WriteBatch write(Map<String, Object> data, String path, WriteBatch batch){
+        batch = (batch != null)? batch : FirebaseFirestore.getInstance().batch();
+        DocumentReference doc = FirebaseFirestore.getInstance().document(path);
+        batch.set(doc, data);
+        return batch;
+    }
+    private void writeCommit(final DatabaseTask taskName, WriteBatch batch){
+        final DatabaseListener listener = (DatabaseListener) context;
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onDatabaseResultW(taskName, task);
+            }
+        });
     }
 
 
-    public void getFamilyID(){
-        loadD(DatabaseTask.DB_GET_FAMILY_ID, familyIndex);}
+    public void getFamilyID(){loadD(DatabaseTask.DB_GET_FAMILY_ID, familyIndex);}
     public String getFamilyID(Task<DocumentSnapshot> task, String familyName) throws Exception {
         return (String)read(task, familyName);}
 
-    public void createUserAndFamily(String name, boolean isParent, boolean joiningFamily){
+    public void getUserID(){loadD(DatabaseTask.DB_GET_USER_ID, userIndex);}
+    public String getUserID(Task<DocumentSnapshot> task, String email) throws Exception {
+        return (String)read(task, Functions.formatEmail(email));
+    }
 
+    public void createUserAndFamily(String email, String ID, String name, boolean isParent, String familyName){
+        WriteBatch batch = null;
+        Map<String, Object> data = new HashMap<>();
+        ArrayList<String> list = new ArrayList<>();
+        //todo write to family
+        data = new HashMap<>();
+        data.put("name",familyName);
+        list.add(ID);
+        data.put("members", list);
+        list = new ArrayList<>();
+        data.put("invitedMembers", list);
+        String familyID = makeDoc(family);
+        batch = write(data, family+"/"+familyID,null);
+        //todo write to user
+        data = new HashMap<>();
+        data.put("name",name);
+        data.put("isParent",isParent);
+        data.put("email",email);
+        data.put("familyName",familyName);
+        batch = write(data, user+"/"+ID, batch);
+        //todo write to userIndex
+        data = new HashMap<>();
+        data.put(Functions.formatEmail(email),ID);
+        batch = write(data, userIndex, batch);
+        //todo write to familyIndex
+        data = new HashMap<>();
+        data.put(familyName, familyID);
+        batch = write(data, familyIndex, batch);
+
+        writeCommit(DatabaseTask.DB_CREATE_USER_AND_FAMILY, batch);
+    }
+    public boolean createUserAndFamily(Task<Void> task){
+        if(task.isSuccessful()){
+            Log.d("Database",context.getString(R.string.userCreationSuccessful));
+            Functions.showMessage(context.getString(R.string.userCreationSuccessful), context, true);
+        }else{
+            Log.d("Database",task.getException().getMessage());
+            Functions.showMessage(task.getException().getLocalizedMessage(), context, true);
+        }
+        return task.isSuccessful();
     }
 
 //    private String userPathPrefix = "users/";

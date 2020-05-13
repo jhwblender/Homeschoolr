@@ -49,7 +49,10 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     }
 
     @Override
-    public void onBackPressed(){}
+    public void onBackPressed(){
+        auth.signOut();
+        Functions.goToActivity(LoginActivity.class,this);
+    }
 
     //changing text to say if they are a parent or a child
     public void amParentSwitched(View view){
@@ -90,13 +93,16 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     private void registerUser(String familyID){
         //Log.d("RegisterMoreActivity",familyID);
         //Functions.showMessage(familyID, this, true);
-        if(!joiningFamily)
-            if(familyID == null)
-                database.createUserAndFamily(name, isParent, false);
+        if(!joiningFamily) { //not joining family
+            if (familyID == null)
+                database.createUserAndFamily(auth.getEmail(), auth.getID(), name, isParent, familyName);
             else {
                 Functions.showMessage(getString(R.string.familyIDExists), this, true);
                 return;
             }
+        }else{ //joining family
+
+        }
     }
 
     @Override
@@ -115,7 +121,12 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
 
     @Override
     public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
-
+        Functions.loadingView(false, this);
+        switch (taskName){
+            case DB_CREATE_USER_AND_FAMILY:
+                if(database.createUserAndFamily(task))
+                    Functions.goToActivity(SettingsActivity.class, this);
+        }
     }
 
     @Override

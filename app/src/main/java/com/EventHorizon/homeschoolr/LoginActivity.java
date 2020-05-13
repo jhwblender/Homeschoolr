@@ -3,6 +3,7 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +39,8 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
 
         super.onStart();
         if (auth.isSignedIn()) {
-            Functions.goToActivity(SettingsActivity.class, this);
+            Functions.loadingView(true,this);
+            database.getUserID();
         }
     }
 
@@ -63,12 +65,28 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         if(taskName == DatabaseTask.AUTH_RESET_PASSWORD)
             auth.resetPassword(task, this);
     }
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){}
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){
+        Functions.loadingView(false, this);
+        try {
+            switch(taskName){
+                case DB_GET_USER_ID:
+                    if(database.getUserID(task, getEmail()) != null)
+                        Functions.goToActivity(SettingsActivity.class, this);
+                    else
+                        Functions.goToActivity(RegisterMoreActivity.class, this);
+                    break;
+            }
+        }catch(Exception e){
+            Functions.showMessage(e.getLocalizedMessage(), this, true);
+        }
+    }
     public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task){
         Functions.loadingView(false, this);
         if(taskName == DatabaseTask.AUTH_LOGIN)
-            if(auth.signIn(task, this))
-                Functions.goToActivity(SettingsActivity.class, this);
+            if(auth.signIn(task, this)) {
+                Functions.loadingView(true, this);
+                database.getUserID();
+            }
     }
 
     public void registerButtonClicked(View view){
@@ -81,5 +99,10 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         }
     }
 
-    private String getEmail(){return usernameView.getText().toString();}
+    private String getEmail(){
+        if(auth.isSignedIn())
+            return auth.getEmail();
+        else
+            return usernameView.getText().toString();
+    }
 }

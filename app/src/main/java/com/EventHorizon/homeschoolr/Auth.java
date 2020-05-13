@@ -27,6 +27,14 @@ public class Auth {
         return user != null;
     }
 
+    public String getEmail(){
+        return user.getEmail();
+    }
+
+    public String getID(){
+        return user.getUid();
+    }
+
     public void createUser(final String email, String password, final Activity context){
         final DatabaseListener listener = (DatabaseListener) context;
         auth.createUserWithEmailAndPassword(email, password)

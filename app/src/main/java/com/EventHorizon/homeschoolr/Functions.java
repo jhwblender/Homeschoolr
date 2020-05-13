@@ -46,6 +46,10 @@ public class Functions {
         showMessage(context.getString(R.string.badEmailFormat), context, false);
         return false;
     }
+    public static String formatEmail(String email){
+        return email.toLowerCase().replace(".",",");
+    }
+
     public static boolean checkPassword(String password, Context context){
         if(password.length() > 6)
             return true;

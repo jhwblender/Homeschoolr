@@ -7,5 +7,7 @@ public enum DatabaseTask {
     AUTH_RESET_PASSWORD,
 
     DB_DELETE_USER,
-    DB_GET_FAMILY_ID
+    DB_GET_FAMILY_ID,
+    DB_GET_USER_ID,
+    DB_CREATE_USER_AND_FAMILY
 }
