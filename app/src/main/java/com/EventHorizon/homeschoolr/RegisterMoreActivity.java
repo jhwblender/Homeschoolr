@@ -3,7 +3,6 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +38,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
 
         registerButton = findViewById(R.id.signInButton);
         familyIDView = findViewById(R.id.password);
-        nameView = findViewById(R.id.email);
+        nameView = findViewById(R.id.nameText);
         isParentView = findViewById(R.id.amParentSwitch);
         amParentSwitched(isParentView);
         joiningFamilyView = findViewById(R.id.joiningFamilySwitch);
@@ -108,7 +107,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     }
 
     @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task) {
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {
         functions.loadingView(false);
         try {
             switch (taskName) {
@@ -122,7 +121,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     }//end onDatabaseResult
 
     @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
+    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step){
         functions.loadingView(false);
         switch (taskName){
             case DB_CREATE_USER_AND_FAMILY:

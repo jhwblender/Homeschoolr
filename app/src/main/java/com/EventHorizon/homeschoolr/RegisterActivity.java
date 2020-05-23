@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity implements DatabaseListe
     @Override
     protected void onStart() {
         super.onStart();
-        emailView = findViewById(R.id.email);
+        emailView = findViewById(R.id.nameText);
         passwordView = findViewById(R.id.password);
         passwordVerifyView = findViewById(R.id.passwordVerify);
     }
@@ -49,10 +49,10 @@ public class RegisterActivity extends AppCompatActivity implements DatabaseListe
     }
 
     @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task) {}
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {}
 
     @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task) {}
+    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step) {}
 
     @Override
     public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {

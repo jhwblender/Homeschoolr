@@ -35,10 +35,6 @@ public class Auth {
         return user.getEmail();
     }
 
-    public String getID(){
-        return user.getUid();
-    }
-
     public void createUser(final String email, String password){
         final DatabaseListener listener = (DatabaseListener) context;
         auth.createUserWithEmailAndPassword(email, password)
@@ -85,21 +81,21 @@ public class Auth {
 
     public void signOut(){
         auth.signOut();
+        functions.goToActivity(LoginActivity.class);
     }
 
-    public void deleteAccount(Context context){
+    public void deleteAccount(){
+        Log.d("Auth","Deleting Auth account");
         final DatabaseListener listener = (DatabaseListener) context;
-        String id = user.getUid();
-
         //delete from authentication
         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                listener.onDatabaseResultW(DatabaseTask.AUTH_DELETE_USER,task);
+                listener.onDatabaseResultW(DatabaseTask.AUTH_DELETE_USER,task,0);
             }
         });
     }
-    public boolean deleteAccount(Task task, Context context){
+    public boolean deleteAccount(Task task){
         if(task.isSuccessful()){
             Log.w("Auth","Deleting Auth Account Successful");
             functions.showMessage(context.getString(R.string.acctDelSuccessful),true);
@@ -117,7 +113,7 @@ public class Auth {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                listener.onDatabaseResultW(DatabaseTask.AUTH_RESET_PASSWORD, task);
+                listener.onDatabaseResultW(DatabaseTask.AUTH_RESET_PASSWORD, task,0);
             }
         });
     }

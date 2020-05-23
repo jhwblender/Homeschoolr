@@ -3,7 +3,6 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
     protected void onStart() {
         signInButton = findViewById(R.id.signInButton);
         loadingSymbol = findViewById(R.id.loadingSymbol);
-        usernameView = findViewById(R.id.email);
+        usernameView = findViewById(R.id.nameText);
         passwordView = findViewById(R.id.password);
 
         super.onStart();
@@ -62,12 +61,14 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
     }
 
     //Database returned something
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task){
+    @Override
+    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step){
         functions.loadingView(false);
         if(taskName == DatabaseTask.AUTH_RESET_PASSWORD)
             auth.resetPassword(task);
     }
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task){
+    @Override
+    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step){
         functions.loadingView(false);
         try {
             switch(taskName){
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
             functions.showMessage(e.getLocalizedMessage(), true);
         }
     }
+    @Override
     public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task){
         functions.loadingView(false);
         if(taskName == DatabaseTask.AUTH_LOGIN)
