@@ -111,7 +111,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
         functions.loadingView(false);
         try {
             switch (taskName) {
-                case DB_GET_FAMILY_ID:
+                case DB_GET_FAMILY_NAME:
                     registerUser(database.getFamilyID(task, familyIDView.getText().toString()));
                     break;
             }

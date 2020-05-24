@@ -23,8 +23,11 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
     Functions functions;
     TextView emailView;
     TextView nameView;
+    TextView familyNameView;
     HashMap<String, Object> personalInfo;
     Context context = this;
+    Map<String, Object> info;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +37,15 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
         database = new Database(this);
         functions = new Functions(this);
 
-        nameView = findViewById(R.id.nameText);
-        emailView = findViewById(R.id.emailText);
-        String nameViewText = nameView.getText()+": ";
-        nameView.setText(nameViewText);
-        String emailViewText = emailView.getText()+": ";
-        emailView.setText(emailViewText);
+        nameView = findViewById(R.id.name);
+        emailView = findViewById(R.id.email);
+        familyNameView = findViewById(R.id.familyName);
+        email = auth.getEmail();
+        emailView.setText(email);
+        database.getName();
+        database.getFamilyName();
     }
 
-    //todo add delete account
     //todo add name pulled from database
 
     //Logout button clicked
@@ -73,11 +76,27 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
     @Override
     public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {
         try {
-            if (taskName == DatabaseTask.DB_DELETE_USER)
-                if (step == 1)
-                    database.deleteAccount(task, step, auth.getEmail());
-                else
-                    database.deleteAccount(task, step, null);
+            switch (taskName) {
+                case DB_DELETE_USER:
+                    if (step == 1)
+                        database.deleteAccount(task, step, auth.getEmail());
+                    else
+                        database.deleteAccount(task, step, null);
+                    break;
+                case DB_GET_USER_NAME:
+                    if(step == 0)
+                        database.getName(task, email);
+                    else if(step == 1)
+                        nameView.setText(database.getName(task));
+                    break;
+                case DB_GET_FAMILY_NAME:
+                    if(step == 0)
+                        database.getFamilyName(task, email);
+                    else if(step == 1)
+                        familyNameView.setText(database.getFamilyName(task));
+                    break;
+
+            }
         }catch(Exception e){
             Log.e("SettingsActivity",e.getMessage());
             functions.showMessage(e.getLocalizedMessage(),true);
@@ -97,7 +116,7 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
             }
         else{ //if(taskName == DatabaseTask.DB_DELETE_USER) {
             if(database.deleteAccount(task)) {
-                Log.d("SettingsActivity","shouldn't arrive here I think");
+                Log.d("SettingsActivity","Database Successfully Deleted");
             }
         }
     }

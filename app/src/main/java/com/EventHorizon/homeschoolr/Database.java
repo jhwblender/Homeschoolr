@@ -96,6 +96,17 @@ public class Database{
         });
     }
 
+    public void getName(){loadD(DatabaseTask.DB_GET_USER_NAME, userIndex,0);}
+    public void getName(Task<DocumentSnapshot> task, String email) throws Exception {
+        loadD(DatabaseTask.DB_GET_USER_NAME, user+"/"+(String)read(task, functions.formatEmail(email)),1);}
+    public String getName(Task<DocumentSnapshot> task) throws Exception {return (String)read(task, "name");}
+
+    //todo add ability to change name, email, and familyName
+
+    public void getFamilyName(){loadD(DatabaseTask.DB_GET_FAMILY_NAME, userIndex,0);}
+    public void getFamilyName(Task<DocumentSnapshot> task, String email) throws Exception {
+        loadD(DatabaseTask.DB_GET_FAMILY_NAME, user+"/"+(String)read(task, functions.formatEmail(email)),1);}
+    public String getFamilyName(Task<DocumentSnapshot> task) throws Exception {return (String)read(task, "familyName");}
 
     public void getFamilyID(){loadD(DatabaseTask.DB_GET_FAMILY_ID, familyIndex);}
     public String getFamilyID(Task<DocumentSnapshot> task, String familyName) throws Exception {

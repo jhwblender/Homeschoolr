@@ -70,10 +70,20 @@
                     android:text="@string/name"
                     android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@string/empty"
+                    android:textSize="18sp" />
+
                 <Button
                     android:id="@+id/changeNameButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40sp"
+                    android:enabled="false"
                     android:text="@string/change" />
 
             </TableRow>
@@ -91,12 +101,53 @@
                     android:text="@string/email"
                     android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@string/empty"
+                    android:textSize="18sp" />
+
                 <Button
                     android:id="@+id/changeEmailButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40sp"
+                    android:enabled="false"
                     android:text="@string/change"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/FamilyName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/familyNameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/familyID"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/familyName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@string/empty"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/changeFamilyNameButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40sp"
+                    android:enabled="false"
+                    android:text="@string/change"
+                    android:visibility="visible" />
             </TableRow>
 
             <TableRow
