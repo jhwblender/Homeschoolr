@@ -46,13 +46,17 @@ public class Functions {
 
     //displays loading
     public void loadingView(boolean isLoading){
-        context.findViewById(R.id.loadingSymbol)
-                .setVisibility(isLoading? View.VISIBLE : View.INVISIBLE);
-        if(isLoading)
-           context.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        else
-            context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            context.findViewById(R.id.loadingSymbol)
+                    .setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
+            if (isLoading)
+                context.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            else
+                context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }catch(Exception e){
+            //Nothing
+        }
     }
 
     public boolean checkEmail(String email){

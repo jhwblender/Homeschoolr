@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +17,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RegisterMoreActivity extends AppCompatActivity{
+import java.util.HashMap;
+
+public class RegisterMoreActivity extends AppCompatActivity implements AuthListener{
     Auth auth;
     Functions functions;
 
@@ -110,8 +113,8 @@ public class RegisterMoreActivity extends AppCompatActivity{
                     }else{ //familyName exists
                         if(!joiningFamily)
                             functions.showMessage(getString(R.string.familyNameExists));
-                        else{ //todo check invites
-
+                        else{
+                            checkInvite();
                         }
                     }
                 }else{
@@ -124,6 +127,44 @@ public class RegisterMoreActivity extends AppCompatActivity{
     private void createUser(){
         //todo create user
         Person user = new Person(auth.getEmail(), isParent, name, familyName);
-        Family fam = new Family(familyName, auth.getEmail());
+        Family fam = new Family(familyName, auth.getEmail(), this);
+        functions.goToActivity(LoginActivity.class);
+    }
+
+    private void addUserToFamily(){
+        Person user = new Person(auth.getEmail(), isParent, name, familyName);
+        Family.download(this, familyName, this);
+    }
+
+    private void checkInvite(){
+        //Check invite first
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/invites");
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    String inviteFamilyName = (String)task.getResult().get(functions.formatEmail(auth.getEmail()));
+                    if(familyName.equals(inviteFamilyName))
+                        addUserToFamily();
+                    else
+                        functions.showMessage("Sorry, this family hasn't invited you");
+                }else{
+                    functions.showMessage(task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void authResult(TaskName result) {
+        Log.d("RegisterMoreActivity",result.toString());
+        switch(result){
+            case DB_FAMILY_LOADED_SUCCESSFULLY:
+                Family family = Family.load(this);
+                family.addMember(auth.getEmail(), this);
+                family.removeInvite(auth.getEmail(), this);
+                functions.goToActivity(SettingsActivity.class);
+                break;
+        }
     }
 }

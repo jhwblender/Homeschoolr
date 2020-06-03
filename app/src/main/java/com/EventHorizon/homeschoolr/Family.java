@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,15 +29,16 @@ public class Family {
     private ArrayList<String> memberEmails = new ArrayList<>();
     private ArrayList<String> inviteEmails = new ArrayList<>();
 
-    public Family(String familyName, String email){
+    public Family(String familyName, String email, Context context){
         memberEmails.add(email);
         this.familyName = familyName;
-        upload();
+        save(context);
     }
 
     public ArrayList<String> getInviteEmailList(){
         return inviteEmails;
     }
+    public ArrayList<String> getMemberEmails(){return memberEmails;}
 
     public void inviteMember(String email, Context context){
         if(inviteEmails.contains(email)){
@@ -63,6 +65,27 @@ public class Family {
         save(context);
     }
 
+    public void addMember(String email, Context context){
+        if(!memberEmails.contains(email)) {
+            memberEmails.add(email);
+            save(context);
+        }
+    }
+    public void removeMember(String email, Context context){
+        memberEmails.remove(email);
+        save(context);
+        if(memberEmails.size() == 0)
+            deleteFamily(context);
+    }
+
+    private void deleteFamily(Context context){
+        unsave(context);
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/family");
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(familyName, FieldValue.delete());
+        ref.update(data);
+    }
+
     public void removeInvite(final String email, final Context context){
         inviteEmails.remove(email);
         save(context);
@@ -73,7 +96,7 @@ public class Family {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
-                    Functions.showMessage(email+" deleted Successfully", context);
+                    Log.d("Family",email+" deleted Successfully");
                 else
                     Functions.showMessage(task.getException().getMessage(), context);
             }
@@ -119,7 +142,7 @@ public class Family {
         editor.putString("Family", allData).apply();
         upload();
     }
-    public static void delete(Context context){
+    public static void unsave(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("Family",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
@@ -131,7 +154,7 @@ public class Family {
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/family");
         HashMap<String, Object> data = new HashMap<>();
         data.put(familyName,thisFamily);
-        ref.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+        ref.update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful())

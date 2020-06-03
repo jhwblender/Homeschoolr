@@ -6,29 +6,29 @@
     android:layout_height="match_parent">
 
     <TableRow
-        android:id="@+id/dummyRow"
+        android:id="@+id/dummyMemberRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15sp"
             android:layout_marginRight="15sp"
             android:layout_weight="1"
-            android:text="@string/dummyEmail"
+            android:text="@string/dummyName"
             android:textSize="18sp" />
 
         <Button
+            android:id="@+id/changeFamilyNameButton2"
             android:layout_width="wrap_content"
             android:layout_height="40sp"
-            android:onClick="deleteInvite"
+            android:enabled="false"
             android:text="@string/remove"
             android:textColor="#FF7B00"
             android:visibility="visible" />
-
     </TableRow>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@ public class Auth {
     }
 
     private void handleResult(Task task, TaskName resultName){
+        functions.loadingView(false);
         if(task.isSuccessful()) {
             Log.d("Auth", "Task "+resultName+" successful");
             ((AuthListener)context).authResult(resultName);

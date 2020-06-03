@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
@@ -42,12 +43,42 @@ public class Person
         return familyName;
     }
 
+    public void deleteAccount(String email, final Context context){
+        unsave(context);
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(Functions.formatEmail2(email), FieldValue.delete());
+        ref.update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    ((AuthListener)context).authResult(TaskName.DB_DELETE_USER_SUCCESSFUL);
+                }else{
+                    Functions.showMessage(task.getException().getMessage(), context);
+                }
+            }
+        });
+    }
+
     public static Person save(Context context, String userFile, String email){
         SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(email, userFile).apply();
         Gson gson = new Gson();
         return gson.fromJson(userFile, Person.class);
+    }
+    public void save(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String userFile = gson.toJson(this);
+        editor.putString(email, userFile).apply();
+        upload();
+    }
+    public void unsave(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().apply();
     }
     public static Person load(Context context, String email){
         SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
@@ -61,7 +92,7 @@ public class Person
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
         HashMap<String, Object> data = new HashMap<>();
         data.put(Functions.formatEmail2(email),thisUser);
-        ref.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+        ref.update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful())

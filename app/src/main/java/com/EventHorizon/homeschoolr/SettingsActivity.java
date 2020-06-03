@@ -38,6 +38,7 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
     EditText inviteEmail;
     String email;
     LinearLayout inviteContainer;
+    LinearLayout memberContainer;
 
 
     Person user;
@@ -47,6 +48,12 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         auth = new Auth(this);
         functions = new Functions(this);
 
@@ -56,21 +63,24 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
         enterEmailDialog = findViewById(R.id.EnterEmailDialog);
         inviteEmail = findViewById(R.id.inviteEmail);
         inviteContainer = findViewById(R.id.inviteContainer);
+        memberContainer = findViewById(R.id.memberContainer);
         email = auth.getEmail();
         emailView.setText(email);
 
         family = Family.load(this);
         user = Person.load(this, email);
 
-        populateInvites();
         familyNameView.setText(family.getFamilyName());
         nameView.setText(user.getName());
-    }
 
-    //todo add name pulled from database
+        populateInvites();
+        populateMembers();
+    }
 
     //Logout button clicked
     public void logout(View view){
+        user.unsave(this);
+        Family.unsave(this);
         auth.signOut();
         functions.goToActivity(LoginActivity.class);
     }
@@ -95,11 +105,14 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
     }
 
     //Verification for account deletion
+    Context context = this;
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener(){
         @Override
         public void onClick(DialogInterface dialog, int which) {
             if(which==DialogInterface.BUTTON_POSITIVE) {
-                //auth.deleteAccount();
+                functions.loadingView(true);
+                user.deleteAccount(auth.getEmail(), context);
+                family.removeMember(auth.getEmail(),context);
             }else
                 functions.showMessage(getString(R.string.deleteCancel),false);
         }
@@ -118,6 +131,7 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
         }
     }
     public void addInvite(String email){
+
         getLayoutInflater().inflate(R.layout.invite_row, inviteContainer, true);
         ConstraintLayout layout = (ConstraintLayout) inviteContainer.getChildAt(inviteContainer.getChildCount() - 1);
         TableRow inviteRow = (TableRow) layout.getChildAt(0);
@@ -127,8 +141,30 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
         emailView.setText(email);
     }
 
+    public void populateMembers(){
+        ArrayList<String> invited = family.getMemberEmails();
+        for(int i = 0; i < invited.size(); i++) {
+            addMember(invited.get(i));
+        }
+    }
+    private void addMember(String email){
+        getLayoutInflater().inflate(R.layout.member_row, memberContainer, true);
+        ConstraintLayout layout = (ConstraintLayout) memberContainer.getChildAt(memberContainer.getChildCount() - 1);
+        TableRow inviteRow = (TableRow) layout.getChildAt(0);
+        ((ViewGroup)inviteRow.getParent()).removeView(inviteRow);
+        memberContainer.addView(inviteRow);
+        TextView emailView = (TextView) inviteRow.getChildAt(0);
+        emailView.setText(email);
+    }
+
     @Override
     public void authResult(TaskName result) {
-
+        switch(result){
+            case DB_DELETE_USER_SUCCESSFUL:
+                auth.deleteAccount();
+                break;
+            case AUTH_DELETE_ACCOUNT_SUCCESSFUL:
+                functions.goToActivity(LoginActivity.class);
+        }
     }
 }

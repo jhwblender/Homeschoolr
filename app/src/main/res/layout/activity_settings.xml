@@ -111,28 +111,18 @@
                     android:layout_height="match_parent"
                     android:background="?android:attr/listDivider" />
 
-                <TableRow
-                    android:id="@+id/Member"
+                <LinearLayout
+                    android:id="@+id/memberContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textView3"
+                    <Space
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/dummyName"
-                        android:textSize="18sp" />
+                        android:layout_height="wrap_content" />
 
-                    <Button
-                        android:id="@+id/changeFamilyNameButton2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40sp"
-                        android:enabled="false"
-                        android:text="@string/remove"
-                        android:textColor="#FF7B00"
-                        android:visibility="visible" />
-                </TableRow>
+                </LinearLayout>
+
             </TableRow>
 
             <TableRow
@@ -164,28 +154,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TableRow
-                        android:id="@+id/dummyRow"
+                    <Space
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/dummyEmail"
-                            android:textSize="18sp" />
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="40sp"
-                            android:enabled="false"
-                            android:text="@string/remove"
-                            android:textColor="#FF7B00"
-                            android:visibility="visible" />
-
-                    </TableRow>
+                        android:layout_height="wrap_content" />
 
                     <TableRow
                         android:id="@+id/EnterEmailDialog"

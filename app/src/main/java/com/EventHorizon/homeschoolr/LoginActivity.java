@@ -29,20 +29,20 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        auth = new Auth(this);
-        functions = new Functions(this);
     }
 
     @Override
     protected void onStart() {
+        super.onStart();
+
+        auth = new Auth(this);
+        functions = new Functions(this);
         signInButton = findViewById(R.id.signInButton);
         loadingSymbol = findViewById(R.id.loadingSymbol);
         usernameView = findViewById(R.id.nameText);
         passwordView = findViewById(R.id.password);
 
-        super.onStart();
-        if (auth.isSignedIn()) {
+        if (auth.isSignedIn() && auth.getEmail() != null) {
             functions.loadingView(true);
             Log.d("LoginActivity","Already signed in to: "+auth.getEmail());
             authResult(TaskName.AUTH_SIGN_IN_SUCCESSFUL);
@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
     }
 
     private void checkIfEmailInDatabase(final String email){
+        Log.d("LoginActivity","Email2: "+email);
         final Context context = this;
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -111,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
                 functions.showMessage(getString(R.string.passwordResetGood));
                 break;
             case AUTH_SIGN_IN_SUCCESSFUL:
-                checkIfEmailInDatabase(auth.getEmail());
+                checkIfEmailInDatabase(getEmail());
                 break;
             case DB_FAMILY_LOADED_SUCCESSFULLY:
                 functions.goToActivity(SettingsActivity.class);
