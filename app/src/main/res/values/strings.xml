@@ -23,8 +23,9 @@
     <string name="amParent">I am a parent</string>
     <string name="joiningFamily">I am joining a family</string>
     <string name="emailExists">This email is already registered:\nLogging in…</string>
-    <string name="familyIDExists">sorry, this family ID is already taken</string>
-    <string name="familyIDError">Family ID expecting at least 1 character</string>
+    <string name="familyNameExists">sorry, this family name is already taken</string>
+    <string name="familyNameExpected">sorry, this family does not exist</string>
+    <string name="familyNameError">Family name expecting at least 1 character</string>
     <string name="nameError">Name expecting at least 1 character</string>
     <string name="empty"> </string>
     <string name="moreInfo">More Info</string>
@@ -43,7 +44,19 @@
     <string name="deleteCancel">Account deletion canceled</string>
     <string name="accountErased">Information successfully deleted from server</string>
     <string name="pleaseReSignIn">Please re-sign in to delete account</string>
+    <string name="familySettings">Family Settings</string>
+    <string name="invited">Invited Family Members</string>
+    <string name="members">Family Members</string>
+    <string name="dummyEmail">billybob@bob.com</string>
+    <string name="dummyName">Billy Bob</string>
+    <string name="dummyFamilyName">The Bob\'s</string>
+    <string name="invite">Invite</string>
+    <string name="remove">Remove</string>
+    <string name="enterEmail">Enter email</string>
+    <string name="inviteEmail">Invite email</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <!--Authentication-->
-    <string name="passwordResetGood">If this account exists\na password has been sent</string>
+    <string name="passwordResetGood">If this account exists\na password reset email has been sent</string>
     <string name="acctDelSuccessful">"Account deletion Successful"</string>
 </resources>

@@ -1,20 +1,24 @@
 package com.EventHorizon.homeschoolr;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LoginActivity extends AppCompatActivity implements DatabaseListener{
+public class LoginActivity extends AppCompatActivity implements AuthListener{
     Auth auth;
-    Database database;
     Functions functions;
     Button signInButton;
     ProgressBar loadingSymbol;
@@ -27,7 +31,6 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         setContentView(R.layout.activity_login);
 
         auth = new Auth(this);
-        database = new Database(this);
         functions = new Functions(this);
     }
 
@@ -41,7 +44,8 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
         super.onStart();
         if (auth.isSignedIn()) {
             functions.loadingView(true);
-            database.getUserID();
+            Log.d("LoginActivity","Already signed in to: "+auth.getEmail());
+            authResult(TaskName.AUTH_SIGN_IN_SUCCESSFUL);
         }
     }
 
@@ -55,42 +59,9 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
 
         if(!functions.checkEmail(email));
         else if(password.length() == 0)
-            functions.showMessage(getString(R.string.noPasswordEntered),true);
+            functions.showMessage(getString(R.string.noPasswordEntered));
         else
             auth.signIn(email, password);
-    }
-
-    //Database returned something
-    @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step){
-        functions.loadingView(false);
-        if(taskName == DatabaseTask.AUTH_RESET_PASSWORD)
-            auth.resetPassword(task);
-    }
-    @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step){
-        functions.loadingView(false);
-        try {
-            switch(taskName){
-                case DB_GET_USER_ID:
-                    if(database.getUserID(task, getEmail()) != null)
-                        functions.goToActivity(SettingsActivity.class);
-                    else
-                        functions.goToActivity(RegisterMoreActivity.class);
-                    break;
-            }
-        }catch(Exception e){
-            functions.showMessage(e.getLocalizedMessage(), true);
-        }
-    }
-    @Override
-    public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task){
-        functions.loadingView(false);
-        if(taskName == DatabaseTask.AUTH_LOGIN)
-            if(auth.signIn(task)) {
-                functions.loadingView(true);
-                database.getUserID();
-            }
     }
 
     public void registerButtonClicked(View view){
@@ -108,5 +79,43 @@ public class LoginActivity extends AppCompatActivity implements DatabaseListener
             return auth.getEmail();
         else
             return usernameView.getText().toString();
+    }
+
+    private void checkIfEmailInDatabase(final String email){
+        final Context context = this;
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot snap = task.getResult();
+                    String userData = (String)snap.get(functions.formatEmail(email));
+                    if(userData != null){
+                        //todo save user to SharedPreferences
+                        Person person = Person.save(getApplicationContext(), userData, email);
+                        Family.download(getApplicationContext(), person.getFamilyName(), (AuthListener)context);
+                    }else{
+                        functions.goToActivity(RegisterMoreActivity.class);
+                    }
+                }else{ //Database Read problem
+                    functions.showMessage(task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void authResult(TaskName result) {
+        switch(result){
+            case AUTH_RESET_PASSWORD_SENDING:
+                functions.showMessage(getString(R.string.passwordResetGood));
+                break;
+            case AUTH_SIGN_IN_SUCCESSFUL:
+                checkIfEmailInDatabase(auth.getEmail());
+                break;
+            case DB_FAMILY_LOADED_SUCCESSFULLY:
+                functions.goToActivity(SettingsActivity.class);
+                break;
+        }
     }
 }

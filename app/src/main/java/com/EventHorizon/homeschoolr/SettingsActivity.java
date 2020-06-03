@@ -1,49 +1,70 @@
 package com.EventHorizon.homeschoolr;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingsActivity extends AppCompatActivity implements DatabaseListener{
+public class SettingsActivity extends AppCompatActivity implements AuthListener{
     Auth auth;
-    Database database;
     Functions functions;
     TextView emailView;
     TextView nameView;
     TextView familyNameView;
-    HashMap<String, Object> personalInfo;
-    Context context = this;
-    Map<String, Object> info;
+    TableRow enterEmailDialog;
+    EditText inviteEmail;
     String email;
+    LinearLayout inviteContainer;
+
+
+    Person user;
+    Family family;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         auth = new Auth(this);
-        database = new Database(this);
         functions = new Functions(this);
 
         nameView = findViewById(R.id.name);
         emailView = findViewById(R.id.email);
         familyNameView = findViewById(R.id.familyName);
+        enterEmailDialog = findViewById(R.id.EnterEmailDialog);
+        inviteEmail = findViewById(R.id.inviteEmail);
+        inviteContainer = findViewById(R.id.inviteContainer);
         email = auth.getEmail();
         emailView.setText(email);
-        database.getName();
-        database.getFamilyName();
+
+        family = Family.load(this);
+        user = Person.load(this, email);
+
+        populateInvites();
+        familyNameView.setText(family.getFamilyName());
+        nameView.setText(user.getName());
     }
 
     //todo add name pulled from database
@@ -62,65 +83,52 @@ public class SettingsActivity extends AppCompatActivity implements DatabaseListe
                 .setNegativeButton(getString(R.string.no),dialogClickListener).show();
     }
 
+    public void addInvite(View view){
+        String inviteEmailString = inviteEmail.getText().toString();
+        if(!functions.checkEmail(inviteEmail.getText().toString()))
+            return;
+        else {
+            inviteEmail.setText("");
+            family.inviteMember(inviteEmailString, this);
+            addInvite(inviteEmailString);
+        }
+    }
+
     //Verification for account deletion
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener(){
         @Override
         public void onClick(DialogInterface dialog, int which) {
             if(which==DialogInterface.BUTTON_POSITIVE) {
-                auth.deleteAccount();
+                //auth.deleteAccount();
             }else
                 functions.showMessage(getString(R.string.deleteCancel),false);
         }
     };
 
-    @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {
-        try {
-            switch (taskName) {
-                case DB_DELETE_USER:
-                    if (step == 1)
-                        database.deleteAccount(task, step, auth.getEmail());
-                    else
-                        database.deleteAccount(task, step, null);
-                    break;
-                case DB_GET_USER_NAME:
-                    if(step == 0)
-                        database.getName(task, email);
-                    else if(step == 1)
-                        nameView.setText(database.getName(task));
-                    break;
-                case DB_GET_FAMILY_NAME:
-                    if(step == 0)
-                        database.getFamilyName(task, email);
-                    else if(step == 1)
-                        familyNameView.setText(database.getFamilyName(task));
-                    break;
+    public void deleteInvite(View view){
+        String email = ((TextView)((TableRow)view.getParent()).getChildAt(0)).getText().toString();
+        family.removeInvite(email, this);
+        ((ViewGroup)(view.getParent().getParent())).removeView((View)view.getParent());
+    }
 
-            }
-        }catch(Exception e){
-            Log.e("SettingsActivity",e.getMessage());
-            functions.showMessage(e.getLocalizedMessage(),true);
+    public void populateInvites(){
+        ArrayList<String> invited = family.getInviteEmailList();
+        for(int i = 0; i < invited.size(); i++) {
+            addInvite(invited.get(i));
         }
+    }
+    public void addInvite(String email){
+        getLayoutInflater().inflate(R.layout.invite_row, inviteContainer, true);
+        ConstraintLayout layout = (ConstraintLayout) inviteContainer.getChildAt(inviteContainer.getChildCount() - 1);
+        TableRow inviteRow = (TableRow) layout.getChildAt(0);
+        ((ViewGroup)inviteRow.getParent()).removeView(inviteRow);
+        inviteContainer.addView(inviteRow);
+        TextView emailView = (TextView) inviteRow.getChildAt(0);
+        emailView.setText(email);
     }
 
     @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step) {
-        Log.d("SettingsActivity","Finished database deletion");
-        if(taskName == DatabaseTask.AUTH_DELETE_USER)
-            if(auth.deleteAccount(task))
-                database.deleteAccount();
-            else {
-                functions.showMessage(getString(R.string.pleaseReSignIn),true);
-                auth.signOut();
-                Log.d("SettingsActivity", "User needs to re-sign in to delete account");
-            }
-        else{ //if(taskName == DatabaseTask.DB_DELETE_USER) {
-            if(database.deleteAccount(task)) {
-                Log.d("SettingsActivity","Database Successfully Deleted");
-            }
-        }
-    }
+    public void authResult(TaskName result) {
 
-    @Override
-    public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {}
+    }
 }

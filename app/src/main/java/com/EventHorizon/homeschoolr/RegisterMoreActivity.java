@@ -1,5 +1,6 @@
 package com.EventHorizon.homeschoolr;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -9,13 +10,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RegisterMoreActivity extends AppCompatActivity implements DatabaseListener{
+public class RegisterMoreActivity extends AppCompatActivity{
     Auth auth;
-    Database database;
     Functions functions;
 
     ProgressBar loadingSymbol;
@@ -45,7 +47,6 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
         loadingSymbol = findViewById(R.id.loadingSymbol);
 
         auth = new Auth(this);
-        database = new Database(this);
         functions = new Functions(this);
     }
 
@@ -72,7 +73,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
     //Check the user has put information in
     public void registerButton(View view){
         if(familyIDView.getText().length() < 1) {
-            functions.showMessage(getString(R.string.familyIDError), true);
+            functions.showMessage(getString(R.string.familyNameError), true);
             return;
         }
         if(nameView.getText().length() < 1){
@@ -89,47 +90,40 @@ public class RegisterMoreActivity extends AppCompatActivity implements DatabaseL
         joiningFamily = joiningFamilyView.isChecked();
 
         functions.loadingView(true);
-        database.getFamilyID();
+        checkFamilyName(familyName);
     }
-    private void registerUser(String familyID){
-        //Log.d("RegisterMoreActivity",familyID);
-        //functions.showMessage(familyID, this, true);
-        if(!joiningFamily) { //not joining family
-            if (familyID == null)
-                database.createUserAndFamily(auth.getEmail(), name, isParent, familyName);
-            else {
-                functions.showMessage(getString(R.string.familyIDExists), true);
-                return;
+
+    private void checkFamilyName(final String familyName){
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/family");
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                functions.loadingView(false);
+                if(task.isSuccessful()){
+                    String result = (String)task.getResult().get(familyName);
+                    if(result == null){ //familyName does not exist
+                        if(!joiningFamily)
+                            createUser();
+                        else{
+                            functions.showMessage(getString(R.string.familyNameExpected));
+                        }
+                    }else{ //familyName exists
+                        if(!joiningFamily)
+                            functions.showMessage(getString(R.string.familyNameExists));
+                        else{ //todo check invites
+
+                        }
+                    }
+                }else{
+                    functions.showMessage(task.getException().getMessage());
+                }
             }
-        }else{ //joining family
-
-        }
+        });
     }
 
-    @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {
-        functions.loadingView(false);
-        try {
-            switch (taskName) {
-                case DB_GET_FAMILY_NAME:
-                    registerUser(database.getFamilyID(task, familyIDView.getText().toString()));
-                    break;
-            }
-        }catch(Exception e){
-            functions.showMessage(e.getLocalizedMessage(), true);
-        }
-    }//end onDatabaseResult
-
-    @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step){
-        functions.loadingView(false);
-        switch (taskName){
-            case DB_CREATE_USER_AND_FAMILY:
-                if(database.createUserAndFamily(task))
-                    functions.goToActivity(SettingsActivity.class);
-        }
+    private void createUser(){
+        //todo create user
+        Person user = new Person(auth.getEmail(), isParent, name, familyName);
+        Family fam = new Family(familyName, auth.getEmail());
     }
-
-    @Override
-    public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {}
 }

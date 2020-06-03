@@ -10,7 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-public class RegisterActivity extends AppCompatActivity implements DatabaseListener{
+public class RegisterActivity extends AppCompatActivity implements AuthListener{
     Auth auth;
     Functions functions;
     EditText emailView;
@@ -49,16 +49,9 @@ public class RegisterActivity extends AppCompatActivity implements DatabaseListe
     }
 
     @Override
-    public void onDatabaseResultR(DatabaseTask taskName, Task<DocumentSnapshot> task, int step) {}
-
-    @Override
-    public void onDatabaseResultW(DatabaseTask taskName, Task<Void> task, int step) {}
-
-    @Override
-    public void onDatabaseResultA(DatabaseTask taskName, Task<AuthResult> task) {
-        functions.loadingView(false);
-        if(taskName == DatabaseTask.AUTH_CREATE_USER)
-            if(auth.createUser(task))
-                functions.goToActivity(RegisterMoreActivity.class);
+    public void authResult(TaskName result) {
+        if(result == TaskName.AUTH_CREATE_USER_SUCCESSFUL){
+            functions.goToActivity(RegisterMoreActivity.class);
+        }
     }
 }

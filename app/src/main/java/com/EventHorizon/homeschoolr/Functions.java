@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,10 +26,19 @@ public class Functions {
     public void showMessage(String message, boolean lengthLong){
         if(message == null)
             message = "null";
+        Log.d("Functions","Message displayed: "+message);
         int duration = lengthLong? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, message,duration);
         toast.show();
     }
+    public void showMessage(String message){
+        showMessage(message, true);
+    }
+    public static void showMessage(String message, Context context){
+        Functions functions = new Functions((Activity)context);
+        functions.showMessage(message);
+    }
+
     public void goToActivity(Class activity){
         Intent intent = new Intent(context, activity);
         context.startActivity(intent);
@@ -54,6 +64,7 @@ public class Functions {
     public String formatEmail(String email){
         return email.toLowerCase().replace(".",",");
     }
+    public static String formatEmail2(String email){return email.toLowerCase().replace(".",",");}
 
     public boolean checkPassword(String password){
         if(password.length() > 6)
