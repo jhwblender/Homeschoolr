@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
@@ -52,9 +53,31 @@ public class Person
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    ((AuthListener)context).authResult(TaskName.DB_DELETE_USER_SUCCESSFUL);
+                    ((TaskListener)context).authResult(TaskName.DB_DELETE_USER_SUCCESSFUL);
                 }else{
                     Functions.showMessage(task.getException().getMessage(), context);
+                }
+            }
+        });
+    }
+
+    public static void download(final Context context, final String email, final TaskListener listener){
+        DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String familyData = (String)task.getResult().get(Functions.formatEmail2(email));
+                    if(familyData != null){
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(email, familyData).apply();
+                        listener.authResult(TaskName.DB_USER_LOADED_SUCCESSFULLY);
+                    }else{
+                        Log.e("Family","Userdata empty");
+                    }
+                }else{
+                    Log.e("Person",task.getException().getMessage());
                 }
             }
         });

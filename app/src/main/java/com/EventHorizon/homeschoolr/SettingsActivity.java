@@ -1,15 +1,12 @@
 package com.EventHorizon.homeschoolr;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -17,18 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class SettingsActivity extends AppCompatActivity implements AuthListener{
+public class SettingsActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
     Functions functions;
     TextView emailView;
@@ -68,10 +56,10 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
         emailView.setText(email);
 
         family = Family.load(this);
-        user = Person.load(this, email);
+        ArrayList<Person> users = family.getMembers(this);
 
         familyNameView.setText(family.getFamilyName());
-        nameView.setText(user.getName());
+        nameView.setText(family.getMember(this, auth.getEmail()).getName());
 
         populateInvites();
         populateMembers();
@@ -142,19 +130,19 @@ public class SettingsActivity extends AppCompatActivity implements AuthListener{
     }
 
     public void populateMembers(){
-        ArrayList<String> invited = family.getMemberEmails();
-        for(int i = 0; i < invited.size(); i++) {
-            addMember(invited.get(i));
+        ArrayList<Person> members = family.getMembers(this);
+        for(int i = 0; i < members.size(); i++) {
+            addMember(members.get(i).getName());
         }
     }
-    private void addMember(String email){
+    private void addMember(String memberName){
         getLayoutInflater().inflate(R.layout.member_row, memberContainer, true);
         ConstraintLayout layout = (ConstraintLayout) memberContainer.getChildAt(memberContainer.getChildCount() - 1);
         TableRow inviteRow = (TableRow) layout.getChildAt(0);
         ((ViewGroup)inviteRow.getParent()).removeView(inviteRow);
         memberContainer.addView(inviteRow);
         TextView emailView = (TextView) inviteRow.getChildAt(0);
-        emailView.setText(email);
+        emailView.setText(memberName);
     }
 
     @Override

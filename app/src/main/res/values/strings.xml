@@ -59,4 +59,6 @@
     <!--Authentication-->
     <string name="passwordResetGood">If this account exists\na password reset email has been sent</string>
     <string name="acctDelSuccessful">"Account deletion Successful"</string>
+    <!--Add subject Activity-->
+    <string name="addSubject">Add subject</string>
 </resources>

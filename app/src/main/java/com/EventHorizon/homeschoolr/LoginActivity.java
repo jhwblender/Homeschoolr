@@ -17,7 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LoginActivity extends AppCompatActivity implements AuthListener{
+public class LoginActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
     Functions functions;
     Button signInButton;
@@ -60,8 +60,10 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
         if(!functions.checkEmail(email));
         else if(password.length() == 0)
             functions.showMessage(getString(R.string.noPasswordEntered));
-        else
+        else {
+            functions.loadingView(true);
             auth.signIn(email, password);
+        }
     }
 
     public void registerButtonClicked(View view){
@@ -94,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
                     if(userData != null){
                         //todo save user to SharedPreferences
                         Person person = Person.save(getApplicationContext(), userData, email);
-                        Family.download(getApplicationContext(), person.getFamilyName(), (AuthListener)context);
+                        Family.download(getApplicationContext(), person.getFamilyName(), (TaskListener)context);
                     }else{
                         functions.goToActivity(RegisterMoreActivity.class);
                     }
@@ -105,8 +107,11 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
         });
     }
 
+    int downloadedUserCount = 0;
+    Family family;
     @Override
     public void authResult(TaskName result) {
+        functions.loadingView(false);
         switch(result){
             case AUTH_RESET_PASSWORD_SENDING:
                 functions.showMessage(getString(R.string.passwordResetGood));
@@ -115,7 +120,13 @@ public class LoginActivity extends AppCompatActivity implements AuthListener{
                 checkIfEmailInDatabase(getEmail());
                 break;
             case DB_FAMILY_LOADED_SUCCESSFULLY:
-                functions.goToActivity(SettingsActivity.class);
+                family = Family.load(this);
+                family.downloadMembers(this, this);
+                break;
+            case DB_USER_LOADED_SUCCESSFULLY:
+                downloadedUserCount++;
+                if(downloadedUserCount == family.getNumMembers())
+                    functions.goToActivity(CalendarActivity.class);
                 break;
         }
     }

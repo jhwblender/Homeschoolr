@@ -28,7 +28,7 @@ public class Auth {
         functions.loadingView(false);
         if(task.isSuccessful()) {
             Log.d("Auth", "Task "+resultName+" successful");
-            ((AuthListener)context).authResult(resultName);
+            ((TaskListener)context).authResult(resultName);
         }else{
             functions.showMessage(task.getException().getLocalizedMessage(),true);
             Log.e("Auth",task.getException().getMessage());
@@ -49,7 +49,7 @@ public class Auth {
     }
 
     public void createUser(final String email, String password){
-        final AuthListener listener = (AuthListener) context;
+        final TaskListener listener = (TaskListener) context;
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -60,7 +60,7 @@ public class Auth {
     }
 
     public void signIn(String email, String password){
-        final AuthListener listener = (AuthListener) context;
+        final TaskListener listener = (TaskListener) context;
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -77,7 +77,7 @@ public class Auth {
 
     public void deleteAccount(){
         Log.d("Auth","Deleting Auth account");
-        final AuthListener listener = (AuthListener) context;
+        final TaskListener listener = (TaskListener) context;
         //delete from authentication
         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -88,7 +88,7 @@ public class Auth {
     }
 
     public void resetPassword(String email){
-        final AuthListener listener = (AuthListener) context;
+        final TaskListener listener = (TaskListener) context;
         auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -6,11 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-public class RegisterActivity extends AppCompatActivity implements AuthListener{
+public class RegisterActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
     Functions functions;
     EditText emailView;

@@ -17,9 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-
-public class RegisterMoreActivity extends AppCompatActivity implements AuthListener{
+public class RegisterMoreActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
     Functions functions;
 
@@ -163,7 +161,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements AuthListe
                 Family family = Family.load(this);
                 family.addMember(auth.getEmail(), this);
                 family.removeInvite(auth.getEmail(), this);
-                functions.goToActivity(SettingsActivity.class);
+                functions.goToActivity(CalendarActivity.class);
                 break;
         }
     }

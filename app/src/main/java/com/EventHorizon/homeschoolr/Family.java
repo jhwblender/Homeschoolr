@@ -4,13 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,7 +15,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,6 +34,24 @@ public class Family {
     }
     public ArrayList<String> getMemberEmails(){return memberEmails;}
 
+    public void downloadMembers(Context context, TaskListener listener){
+        for(int i = 0; i < memberEmails.size(); i++){
+            Person.download(context, memberEmails.get(i),listener);
+        }
+    }
+    public int getNumMembers(){
+        return memberEmails.size();
+    }
+    public Person getMember(Context context, String email){
+        return Person.load(context, email);
+    }
+    public ArrayList<Person> getMembers(Context context){
+        ArrayList<Person> users = new ArrayList<>();
+        for(int i = 0; i < memberEmails.size(); i++){
+            users.add(Person.load(context, memberEmails.get(i)));
+        }
+        return users;
+    }
     public void inviteMember(String email, Context context){
         if(inviteEmails.contains(email)){
             Functions.showMessage("Invite already exists",context);
@@ -74,8 +86,11 @@ public class Family {
     public void removeMember(String email, Context context){
         memberEmails.remove(email);
         save(context);
-        if(memberEmails.size() == 0)
+        if(memberEmails.size() == 0) {
+            for(int i = 0; i < inviteEmails.size(); i++)
+                removeInvite(inviteEmails.get(i),context);
             deleteFamily(context);
+        }
     }
 
     private void deleteFamily(Context context){
@@ -107,7 +122,7 @@ public class Family {
         return familyName;
     }
 
-    public static void download(final Context context, final String familyName, final AuthListener listener){
+    public static void download(final Context context, final String familyName, final TaskListener listener){
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/family");
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
