@@ -61,4 +61,19 @@
     <string name="acctDelSuccessful">"Account deletion Successful"</string>
     <!--Add subject Activity-->
     <string name="addSubject">Add subject</string>
+    <string name="child">Child</string>
+    <string name="subject">Subject</string>
+    <string name="numOfLessons">Number of lessons</string>
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="length">Length</string>
+    <string name="hours">hr</string>
+    <string name="minutes">min</string>
+    <string name="go">Go forth and make ye yonder activities</string>
+    <string name="and">and</string>
 </resources>
