@@ -60,6 +60,10 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
         familyNameView.setText(family.getFamilyName());
         nameView.setText(family.getMember(this, auth.getEmail()).getName());
+        if(!family.getMember(this, auth.getEmail()).getIsParent()){
+            findViewById(R.id.invitedFamilyMembersTitle).setVisibility(View.GONE);
+            findViewById(R.id.invitedFamilyMembers).setVisibility(View.GONE);
+        }
 
         populateInvites();
         populateMembers();
@@ -67,8 +71,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
     //Logout button clicked
     public void logout(View view){
-        user.unsave(this);
-        Family.unsave(this);
+        family.unsave(this);
         auth.signOut();
         functions.goToActivity(LoginActivity.class);
     }

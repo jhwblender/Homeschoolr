@@ -126,6 +126,7 @@
             </TableRow>
 
             <TableRow
+                android:id="@+id/invitedFamilyMembersTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -139,7 +140,7 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/InvitedFamilyMembers"
+                android:id="@+id/invitedFamilyMembers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

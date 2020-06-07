@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Person
@@ -22,8 +23,10 @@ public class Person
     private String email;
     private String familyName;
     private boolean isParent;
+    ArrayList<Subject> subjects;
 
     public Person(String email, boolean isParent, String name, String familyName){
+        subjects = new ArrayList<>();
         this.email = email;
         this.isParent = isParent;
         this.name = name;
@@ -43,6 +46,13 @@ public class Person
     public String getFamilyName(){
         return familyName;
     }
+    public void addSubject(Context context, String subjectName, boolean[] numLessons, int days,int hrLength,int minLength){
+        if(subjects == null)
+            subjects = new ArrayList<>();
+        subjects.add(new Subject(subjectName, numLessons, days, hrLength, minLength));
+        save(context);
+    }
+
 
     public void deleteAccount(String email, final Context context){
         unsave(context);
@@ -96,9 +106,9 @@ public class Person
         Gson gson = new Gson();
         String userFile = gson.toJson(this);
         editor.putString(email, userFile).apply();
-        upload();
+        upload(context);
     }
-    public void unsave(Context context){
+    public static void unsave(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
@@ -109,7 +119,7 @@ public class Person
         Gson gson = new Gson();
         return gson.fromJson(allData, Person.class);
     }
-    public void upload(){
+    public void upload(final Context context){
         Gson gson = new Gson();
         String thisUser = gson.toJson(this);
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
@@ -120,7 +130,13 @@ public class Person
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful())
                     Log.e("Person",task.getException().getMessage());
+                else
+                    if(context != null)
+                        ((TaskListener)context).authResult(TaskName.DB_USER_SAVED_SUCCESSFULLY);
             }
         });
+    }
+    public void upload(){
+        upload(null);
     }
 }

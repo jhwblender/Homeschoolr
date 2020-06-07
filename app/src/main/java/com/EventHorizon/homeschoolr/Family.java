@@ -52,6 +52,14 @@ public class Family {
         }
         return users;
     }
+    public Person getMemberByName(Context context, String name){
+        for(int i = 0; i < memberEmails.size(); i++){
+            Person temp = Person.load(context,memberEmails.get(i));
+            if(temp.getName().equals(name))
+                return temp;
+        }
+        return null;
+    }
     public void inviteMember(String email, Context context){
         if(inviteEmails.contains(email)){
             Functions.showMessage("Invite already exists",context);
@@ -157,7 +165,8 @@ public class Family {
         editor.putString("Family", allData).apply();
         upload();
     }
-    public static void unsave(Context context){
+    public void unsave(Context context){
+        Person.unsave(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences("Family",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
