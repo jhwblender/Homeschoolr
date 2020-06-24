@@ -76,4 +76,22 @@
     <string name="minutes">min</string>
     <string name="go">Go forth and make ye yonder activities</string>
     <string name="and">and</string>
+    <!--Calendar Activity-->
+    <string name="backArrow">&lt;-</string>
+    <string name="forwardArrow">-&gt;</string>
+    <string name="to">to</string>
+    <string name="filterToggle">Filter</string>
+    <string name="dummyWeekDay">Monday</string>
+    <array name = "daysOfWeek">
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five</item>
+        <item>Six</item>
+        <item>Seven</item>
+    </array>
+    <string name="goToToday">Go to today</string>
+    <string name="daysToShow">Days</string>
+    <string name="dummyDate">5/5/55</string>
 </resources>
