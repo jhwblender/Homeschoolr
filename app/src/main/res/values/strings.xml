@@ -82,7 +82,7 @@
     <string name="to">to</string>
     <string name="filterToggle">Filter</string>
     <string name="dummyWeekDay">Monday</string>
-    <array name = "daysOfWeek">
+    <array name="daysOfWeek">
         <item>One</item>
         <item>Two</item>
         <item>Three</item>
@@ -94,4 +94,5 @@
     <string name="goToToday">Go to today</string>
     <string name="daysToShow">Days</string>
     <string name="dummyDate">5/5/55</string>
+    <string name="viewSubjects">View subjects</string>
 </resources>

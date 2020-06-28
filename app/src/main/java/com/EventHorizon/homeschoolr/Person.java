@@ -52,6 +52,9 @@ public class Person
         subjects.add(new Subject(subjectName, numLessons, days, hrLength, minLength));
         save(context);
     }
+    public ArrayList<Subject> getSubjects(){
+        return subjects;
+    }
 
 
     public void deleteAccount(String email, final Context context){

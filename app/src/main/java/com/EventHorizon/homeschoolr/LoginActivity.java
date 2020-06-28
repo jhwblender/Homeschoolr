@@ -128,6 +128,8 @@ public class LoginActivity extends AppCompatActivity implements TaskListener {
                 if(downloadedUserCount == family.getNumMembers())
                     functions.goToActivity(CalendarActivity.class);
                 break;
+            default:
+                Log.e("LoginActivity","Unknown return type "+result);
         }
     }
 }

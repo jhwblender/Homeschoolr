@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".CalendarActivity"></activity>
+        <activity android:name=".ViewSubjects"></activity>
+        <activity android:name=".CalendarActivity" />
         <activity android:name=".AddSubject" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterMoreActivity" />

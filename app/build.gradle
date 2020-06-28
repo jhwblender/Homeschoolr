@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.EventHorizon.homeschoolr"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 2
         versionName '2020.06.05.11.01'
