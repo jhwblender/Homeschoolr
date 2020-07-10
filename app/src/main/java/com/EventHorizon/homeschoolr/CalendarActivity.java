@@ -70,6 +70,14 @@ public class CalendarActivity extends AppCompatActivity {
         endDate = Calendar.getInstance();
         endDate.add(Calendar.DAY_OF_MONTH, numDays);
         updateDates();
+        family = Family.load(this);
+        if(family == null)
+            Log.e("CalendarActivity","Family loaded as null");
+        //hide add-subject if they are a child
+        boolean isParent = family.getMember(this, auth.getEmail()).getIsParent();
+        if(!isParent)
+            addSubjectButton.setVisibility(View.GONE);
+        populateFilters(isParent);
 
         numDaysView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -87,14 +95,7 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d("CalendarActivity","Calendar Activity starting");
-        family = Family.load(this);
-        if(family == null)
-            Log.e("CalendarActivity","Family loaded as null");
-        //hide add-subject if they are a child
-        boolean isParent = family.getMember(this, auth.getEmail()).getIsParent();
-        if(!isParent)
-            addSubjectButton.setVisibility(View.GONE);
-        populateFilters(isParent);
+
     }
 
 

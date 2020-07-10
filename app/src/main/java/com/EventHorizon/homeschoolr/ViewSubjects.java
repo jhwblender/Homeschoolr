@@ -21,7 +21,7 @@ import com.google.firebase.firestore.auth.User;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class ViewSubjects extends AppCompatActivity {
+public class ViewSubjects extends AppCompatActivity implements TaskListener{
 
     Auth auth;
     Functions functions;
@@ -70,23 +70,25 @@ public class ViewSubjects extends AppCompatActivity {
         final ArrayList<Subject> subjects = user.getSubjects();
         for(int i = 0; i < subjects.size(); i++){
             TableRow tableRow = new TableRow(this);
-            Button button = new Button(this);
+            tableRow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            final Button button = new Button(this);
             button.setText("Remove");
             button.setTextColor(Color.RED);
-            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             final int finalI = i;
             final Context context = this;
+            final TextView subjectText = new TextView(this);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     subjects.remove(finalI);
                     user.save(context);
+                    button.setVisibility(View.GONE);
+                    subjectText.setVisibility(View.GONE);
                 }
             });
-            TextView subjectText = new TextView(this);
             subjectText.setText(subjects.get(i).subjectName);
+            Log.d("ViewSubjects",subjects.get(i).subjectName);
             subjectText.setTextSize(20);
-            subjectText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             tableRow.addView(subjectText);
             tableRow.addView(button);
             theList.addView(tableRow);
@@ -97,5 +99,10 @@ public class ViewSubjects extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void authResult(TaskName result) {
+
     }
 }
