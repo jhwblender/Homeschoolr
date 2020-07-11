@@ -101,7 +101,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             numLessonsText.setText("Number of lessons: "+subjects.get(subject).numLessons);
             hourMinText.setText("Time per lesson: "+subjects.get(subject).hrLength+":"+subjects.get(subject).minLength);
 
-            if(user.getIsParent()) {
+            if(true){//user.getIsParent()) {
                 //Setting button settings
                 final Button button = new Button(this);
                 button.setText("Remove");
@@ -122,6 +122,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                 });
 
                 tableRow.addView(button);
+                //theList.addView(button);
             }
             theList.addView(tableRow);
             theList.addView(dayText);
