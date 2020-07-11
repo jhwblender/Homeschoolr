@@ -2,12 +2,16 @@ package com.EventHorizon.homeschoolr;
 
 import android.util.Log;
 
+import java.util.Calendar;
+
 public class Subject {
     String subjectName;
     boolean[] weekdays;
     int numLessons;
     int hrLength;
     int minLength;
+    int hrStart;
+    int minStart;
 
     Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength,int minLength){
         this.subjectName = subjectName;

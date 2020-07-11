@@ -150,6 +150,20 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void updateFilter(View checkBox){
+        Log.d("CalendarActivity","Filter " + ((CheckBox) checkBox)
+                .getText().toString() + " toggled");
+        for(int i = 0; i < filterChecks.size(); i++){
+            if(checkBox == filterChecks.get(i)) {
+                filterList.set(i, ((CheckBox) checkBox).isChecked());
+                Person user = family.getMemberByName(this,((CheckBox) checkBox)
+                        .getText().toString());
+                if(user != null)
+                    for(int e = i + 1; e < user.getSubjects().size() + i + 1; e++) {
+                        filterChecks.get(e).setChecked(((CheckBox) checkBox).isChecked());
+                        updateFilter(filterChecks.get(e));
+                    }
+            }
+        }
         drawer.updateFilter(filterList);
     }
 
