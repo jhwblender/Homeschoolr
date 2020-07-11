@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ViewSubjects extends AppCompatActivity implements TaskListener{
 
@@ -47,6 +48,12 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
     protected void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        functions.goToActivity(CalendarActivity.class);
     }
 
     private void loadChildrenSubjects(){
