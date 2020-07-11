@@ -116,9 +116,12 @@ public class CalendarActivity extends AppCompatActivity {
         ArrayList<Person> familyMembers = family.getMembers(this);
         if(isParent) {
             for (int i = 0; i < familyMembers.size(); i++)
-                if (!familyMembers.get(i).getIsParent())
-                    if (isParent)
-                        addFilter(familyMembers.get(i).getName());
+                if (!familyMembers.get(i).getIsParent()) {
+                    addFilter(familyMembers.get(i).getName());
+                    for(int subject = 0; subject < familyMembers.get(i).getSubjects().size(); subject++){
+                        addFilter(familyMembers.get(i).getSubjects().get(subject).subjectName);
+                    }
+                }
         }else {
             Person user = family.getMember(this, auth.getEmail());
             for(int i = 0; i < user.getSubjects().size(); i ++)

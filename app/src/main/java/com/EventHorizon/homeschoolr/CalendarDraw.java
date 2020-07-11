@@ -150,10 +150,6 @@ public class CalendarDraw extends View {
         postInvalidate();
     }
 
-//    public void updatePreferenceType(PreferenceType[] preferenceTypes){
-//        this.preferenceTypes = preferenceTypes;
-//        postInvalidate();
-//    }
     public void updateColors(ArrayList<Integer> colors){
         this.colors = colors;
         postInvalidate();

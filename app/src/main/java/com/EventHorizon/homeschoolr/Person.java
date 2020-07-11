@@ -46,10 +46,10 @@ public class Person
     public String getFamilyName(){
         return familyName;
     }
-    public void addSubject(Context context, String subjectName, boolean[] numLessons, int days,int hrLength,int minLength){
+    public void addSubject(Context context, String subjectName, int numLessons, boolean[] weekDays ,int hrLength,int minLength){
         if(subjects == null)
             subjects = new ArrayList<>();
-        subjects.add(new Subject(subjectName, numLessons, days, hrLength, minLength));
+        subjects.add(new Subject(subjectName, numLessons, weekDays, hrLength, minLength));
         save(context);
     }
     public ArrayList<Subject> getSubjects(){

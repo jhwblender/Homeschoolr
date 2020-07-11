@@ -3,8 +3,10 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -76,19 +78,19 @@ public class AddSubject extends AppCompatActivity implements TaskListener{
         String subjectName = ((EditText)findViewById(R.id.subject)).getText().toString();
         int numLessons = Integer.parseInt(((EditText)findViewById(R.id.numLessons)).getText().toString());
         boolean days[] = new boolean[7];
-        days[0] = findViewById(R.id.sundayCheckBox).isSelected();
-        days[1] = findViewById(R.id.mondayCheckBox).isSelected();
-        days[2] = findViewById(R.id.tuesdayCheckBox).isSelected();
-        days[3] = findViewById(R.id.wednesdayCheckBox).isSelected();
-        days[4] = findViewById(R.id.thursdayCheckBox).isSelected();
-        days[5] = findViewById(R.id.fridayCheckBox).isSelected();
-        days[6] = findViewById(R.id.saturdayCheckBox).isSelected();
+        days[0] = ((CheckBox)findViewById(R.id.sundayCheckBox)).isChecked();
+        days[1] = ((CheckBox)findViewById(R.id.mondayCheckBox)).isChecked();
+        days[2] = ((CheckBox)findViewById(R.id.tuesdayCheckBox)).isChecked();
+        days[3] = ((CheckBox)findViewById(R.id.wednesdayCheckBox)).isChecked();
+        days[4] = ((CheckBox)findViewById(R.id.thursdayCheckBox)).isChecked();
+        days[5] = ((CheckBox)findViewById(R.id.fridayCheckBox)).isChecked();
+        days[6] = ((CheckBox)findViewById(R.id.saturdayCheckBox)).isChecked();
         int hrLength = Integer.parseInt(((Spinner)findViewById(R.id.hrSpinner)).getSelectedItem().toString());
         int minLength = Integer.parseInt(((Spinner)findViewById(R.id.minSpinner)).getSelectedItem().toString());
 
         functions.loadingView(true);
-        child.addSubject(this, subjectName, days, numLessons, hrLength, minLength);
-        functions.showMessage("");
+        Log.d("AddSubjectAddSubject","["+days[0]+","+days[1]+","+days[2]+","+days[3]+","+days[4]+","+days[5]+","+days[6]+"]");
+        child.addSubject(this, subjectName, numLessons, days, hrLength, minLength);
     }
 
     @Override
