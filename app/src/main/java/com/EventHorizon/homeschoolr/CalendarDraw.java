@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class CalendarDraw extends View {
     boolean isManager;
     ArrayList<Integer> colors;
     ArrayList<Boolean> filter;
+    ArrayList<String> filterNames;
     final String[] dayNames = {"Sat","Sun","Mon","Tue","Wed","Thurs","Fri"};
 
     //drawing values
@@ -154,8 +156,9 @@ public class CalendarDraw extends View {
         this.colors = colors;
         postInvalidate();
     }
-    public void updateFilter(ArrayList<Boolean> filter){
+    public void updateFilter(ArrayList<Boolean> filter, ArrayList<String> filterNames){
         this.filter = filter;
+        this.filterNames = filterNames;
         postInvalidate();
     }
 

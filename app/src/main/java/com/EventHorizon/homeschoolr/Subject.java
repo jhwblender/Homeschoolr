@@ -10,8 +10,7 @@ public class Subject {
     int numLessons;
     int hrLength;
     int minLength;
-    int hrStart;
-    int minStart;
+    Float start = null;
 
     Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength,int minLength){
         this.subjectName = subjectName;

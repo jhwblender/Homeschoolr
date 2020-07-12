@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
-public class CalendarActivity extends AppCompatActivity {
+public class CalendarActivity extends AppCompatActivity implements TaskListener{
     Functions functions;
     Auth auth;
     Button addSubjectButton;
@@ -36,13 +36,14 @@ public class CalendarActivity extends AppCompatActivity {
     ArrayList<Integer> filterColors;
     ArrayList<CheckBox> filterChecks;
     ArrayList<Boolean> filterList;
+    ArrayList<String> filterNames;
 
     Calendar startDate;
     Calendar endDate;
     int numDays;
 
     Family family;
-
+    Scheduler scheduler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class CalendarActivity extends AppCompatActivity {
         filterColors = new ArrayList<>();
         filterChecks = new ArrayList<>();
         filterList = new ArrayList<>();
+        filterNames = new ArrayList<>();
 
         numDaysView.setSelection(2); //set days to view as 3
         dayChange(numDaysView);
@@ -71,6 +73,7 @@ public class CalendarActivity extends AppCompatActivity {
         endDate.add(Calendar.DAY_OF_MONTH, numDays);
         updateDates();
         family = Family.load(this);
+        scheduler = new Scheduler(this, family);
         if(family == null)
             Log.e("CalendarActivity","Family loaded as null");
         //hide add-subject if they are a child
@@ -141,6 +144,7 @@ public class CalendarActivity extends AppCompatActivity {
         filterView.addView(filt);
         filterChecks.add(filt);
         filterList.add(true);
+        filterNames.add(name);
         filt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View checkBox) {
@@ -150,6 +154,7 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void updateFilter(View checkBox){
+        //Known Bug: if name of person matches subject; bad things
         Log.d("CalendarActivity","Filter " + ((CheckBox) checkBox)
                 .getText().toString() + " toggled");
         for(int i = 0; i < filterChecks.size(); i++){
@@ -164,7 +169,7 @@ public class CalendarActivity extends AppCompatActivity {
                     }
             }
         }
-        drawer.updateFilter(filterList);
+        drawer.updateFilter(filterList, filterNames);
     }
 
     //sets the start date to today
@@ -210,4 +215,7 @@ public class CalendarActivity extends AppCompatActivity {
     public void goToSettingsActivity(View view){
         functions.goToActivity(SettingsActivity.class);
     }
+
+    @Override
+    public void authResult(TaskName result) {}
 }

@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -78,13 +80,23 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
         final ArrayList<Subject> subjects = user.getSubjects();
         for(int subject = 0; subject < subjects.size(); subject++){
             TableRow tableRow = new TableRow(this);
-            tableRow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            tableRow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                    , ViewGroup.LayoutParams.MATCH_PARENT));
 
             //Setting subject text
             final TextView subjectText = new TextView(this);
             subjectText.setText(subjects.get(subject).subjectName);
             subjectText.setTextSize(20);
             tableRow.addView(subjectText);
+
+            //Setting start time text
+            final TextView startTimeText = new TextView(this);
+            String startTime = "Start Time: ";
+            startTime += Scheduler.floatToHr(subjects.get(subject).start);
+            startTime += ":";
+            startTime += Scheduler.floatToMin(subjects.get(subject).start);
+            startTimeText.setText(startTime);
+            startTimeText.setTextSize(15);
 
             //Setting days text
             final TextView dayText = new TextView(this);
@@ -125,16 +137,19 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                         dayText.setVisibility(View.GONE);
                         numLessonsText.setVisibility(View.GONE);
                         hourMinText.setVisibility(View.GONE);
+                        startTimeText.setVisibility(View.GONE);
                     }
                 });
 
                 tableRow.addView(button);
                 //theList.addView(button);
             }
+            //theList.addView(subjectText);
             theList.addView(tableRow);
             theList.addView(dayText);
             theList.addView(numLessonsText);
             theList.addView(hourMinText);
+            theList.addView(startTimeText);
 //            subjectText.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
