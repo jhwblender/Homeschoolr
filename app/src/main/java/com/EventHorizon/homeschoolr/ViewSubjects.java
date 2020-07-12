@@ -94,7 +94,10 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             String startTime = "Start Time: ";
             startTime += Scheduler.floatToHr(subjects.get(subject).start);
             startTime += ":";
-            startTime += Scheduler.floatToMin(subjects.get(subject).start);
+            int min = Scheduler.floatToMin(subjects.get(subject).start);
+            if(min < 10)
+                startTime += "0";
+            startTime += min;
             startTimeText.setText(startTime);
             startTimeText.setTextSize(15);
 
