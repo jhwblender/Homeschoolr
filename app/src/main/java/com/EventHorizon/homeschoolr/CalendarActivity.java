@@ -81,7 +81,8 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
         if(!isParent)
             addSubjectButton.setVisibility(View.GONE);
         populateFilters(isParent);
-
+        ArrayList<Person> children = family.getChildren(this);
+        drawer.givePeople(family.getMember(this, auth.getEmail()), children);
         numDaysView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -145,6 +146,7 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
         filterChecks.add(filt);
         filterList.add(true);
         filterNames.add(name);
+        drawer.updateFilter(filterList, filterNames, filterColors);
         filt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View checkBox) {
@@ -169,7 +171,7 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
                     }
             }
         }
-        drawer.updateFilter(filterList, filterNames);
+        drawer.updateFilter(filterList, filterNames, filterColors);
     }
 
     //sets the start date to today

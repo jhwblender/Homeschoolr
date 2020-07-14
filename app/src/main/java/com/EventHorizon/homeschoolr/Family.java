@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,6 +52,14 @@ public class Family {
             users.add(Person.load(context, memberEmails.get(i)));
         }
         return users;
+    }
+    public ArrayList<Person> getChildren(Context context){
+        ArrayList<Person> members = getMembers(context);
+        ArrayList<Person> children = new ArrayList<>();
+        for(int i = 0; i < members.size(); i++)
+            if(!members.get(i).getIsParent())
+                children.add(members.get(i));
+        return children;
     }
     public Person getMemberByName(Context context, String name){
         for(int i = 0; i < memberEmails.size(); i++){

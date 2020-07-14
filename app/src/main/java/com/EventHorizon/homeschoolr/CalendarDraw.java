@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Member;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +42,10 @@ public class CalendarDraw extends View {
     ArrayList<String> filterNames;
     final String[] dayNames = {"Sat","Sun","Mon","Tue","Wed","Thurs","Fri"};
 
+    ArrayList<Person> children;
+    Auth auth;
+    Person user;
+
     //drawing values
     int textWidth;
     int dayWidth;
@@ -50,6 +56,11 @@ public class CalendarDraw extends View {
     //this is where we can draw everything
     protected void onDraw(Canvas canvas)
     {
+        drawBackground(canvas);
+        drawSubjects(canvas);
+    }
+
+    private void drawBackground(Canvas canvas){
         //set paint properties
         drawPaint.setStrokeWidth(2);
         hourHeight = height/26;
@@ -85,15 +96,41 @@ public class CalendarDraw extends View {
             canvas.drawText(String.format("%02d:00",i%24),0,i*hourHeight+2*hourHeight,drawPaint);
             canvas.drawLine(textWidth,i*hourHeight+2*hourHeight,width,i*hourHeight+2*hourHeight,drawPaint);
         }
+    }
 
-        //Check where the user clicks
-        if(touching && touchX > textWidth && !transitioning) {
-            dayTouch = (touchX - textWidth) / dayWidth;
-            //canvas.drawText(Integer.toString(dayTouch), touchX, touchY, drawPaint);
-            touching = false;
-            transitioning = true;
-            //editWorkDay(dayTouch);
+    private void drawSubjects(Canvas canvas){
+        int count = 0;
+        if(user.getIsParent()){
+            for(int c = 0; c < children.size(); c++){
+                ArrayList<Subject> subjects = children.get(c).getSubjects();
+                for(int s = 0; s < subjects.size(); s++){
+                    for(int day = 0; day < numDays; day++){
+                        if(subjects.get(s).weekdays[(dayOfWeek + day - 1)%7] && filter.get(count + 1))
+                            drawSubject(subjects.get(s), day, count, canvas);
+                    }
+                    count++;
+                }
+                count++;
+            }
+        }else {
+            ArrayList<Subject> subjects = user.getSubjects();
+            for(int s = 0; s < subjects.size(); s++){
+                for(int day = 0; day < numDays; day++){
+                    if(subjects.get(s).weekdays[(dayOfWeek + day)%7] && filter.get(count + 1))
+                        drawSubject(subjects.get(s), day, count, canvas);
+                }
+                count++;
+            }
         }
+    }
+    private void drawSubject(Subject subject, int day, int count, Canvas canvas){
+        drawPaint.setColor(colors.get(count + 1));
+        drawPaint.setStyle(Paint.Style.FILL);
+        Rect rectangle = new Rect();
+        float startHour = subject.start;
+        float endHour = subject.start + Scheduler.hrMinToFloat(subject.hrLength,subject.minLength);
+        rectangle.set(textWidth + dayWidth * day, hourHeight * 2 + (int) (startHour * hourHeight), textWidth + dayWidth * (day + 1), hourHeight * 2 + (int) (endHour * hourHeight));
+        canvas.drawRect(rectangle, drawPaint);
     }
 
     private void drawPreference(Canvas canvas, int offset, int filterIndex, Calendar startTime, Calendar endTime, int numEmployees) {
@@ -156,9 +193,10 @@ public class CalendarDraw extends View {
         this.colors = colors;
         postInvalidate();
     }
-    public void updateFilter(ArrayList<Boolean> filter, ArrayList<String> filterNames){
+    public void updateFilter(ArrayList<Boolean> filter, ArrayList<String> filterNames, ArrayList<Integer> filterColors){
         this.filter = filter;
         this.filterNames = filterNames;
+        this.colors = filterColors;
         postInvalidate();
     }
 
@@ -191,6 +229,14 @@ public class CalendarDraw extends View {
                 postInvalidate();
             }
         });
+//        family = Family.load(context);
+//        auth = new Auth((Activity)context);
+//        user = family.getMember(context, auth.getEmail());
+    }
+
+    public void givePeople(Person user, ArrayList<Person> children){
+        this.user = user;
+        this.children = children;
     }
 
     //called when the view changes size
