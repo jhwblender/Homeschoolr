@@ -86,11 +86,6 @@ public class CalendarDraw extends View {
 
                 Calendar date = (Calendar)startDate.clone();
                 date.add(Calendar.DAY_OF_MONTH,day);
-//                if(isManager) {
-//                    drawManagerDay(Company.loadCompany(context), date, day, canvas);
-//                }else{
-//                    drawEmployeeDay(User.loadUser(context), date, day, canvas);
-//                }
             }
         }
 
@@ -105,58 +100,32 @@ public class CalendarDraw extends View {
 
     private void drawSubjects(Canvas canvas){
         int count = 0;
-        if(user.getIsParent()){
+//        if(user.getIsParent()){
             for(int c = 0; c < children.size(); c++){
                 ArrayList<Subject> subjects = children.get(c).getSubjects();
                 for(int s = 0; s < subjects.size(); s++){
                     for(int day = 0; day < numDays; day++){
-                        if(subjects.get(s).weekdays[(dayOfWeek + day - 1)%7] && filter.get(count + 1))
+                        if(subjects.get(s).weekdays[(dayOfWeek + day - 1)%7]
+                                && ((!user.getIsParent() && filter.get(count)) || (user.getIsParent()
+                                && filter.get(count + 1))))
                             drawSubject(subjects.get(s), day, count, canvas);
                     }
                     count++;
                 }
                 count++;
             }
-        }else {
-            ArrayList<Subject> subjects = user.getSubjects();
-            for(int s = 0; s < subjects.size(); s++){
-                for(int day = 0; day < numDays; day++){
-                    if(subjects.get(s).weekdays[(dayOfWeek + day)%7] && filter.get(count + 1))
-                        drawSubject(subjects.get(s), day, count, canvas);
-                }
-                count++;
-            }
-        }
     }
     private void drawSubject(Subject subject, int day, int count, Canvas canvas){
-        drawPaint.setColor(colors.get(count + 1));
+        if(user.getIsParent())
+            drawPaint.setColor(colors.get(count + 1));
+        else
+            drawPaint.setColor(colors.get(count));
         drawPaint.setStyle(Paint.Style.FILL);
         Rect rectangle = new Rect();
         float startHour = subject.start;
         float endHour = subject.start + Scheduler.hrMinToFloat(subject.hrLength,subject.minLength);
         rectangle.set(textWidth + dayWidth * day, hourHeight * 2 + (int) (startHour * hourHeight), textWidth + dayWidth * (day + 1), hourHeight * 2 + (int) (endHour * hourHeight));
         canvas.drawRect(rectangle, drawPaint);
-    }
-
-    private void drawPreference(Canvas canvas, int offset, int filterIndex, Calendar startTime, Calendar endTime, int numEmployees) {
-//        float startHour = (float) startTime.get(Calendar.HOUR_OF_DAY) + (float) startTime.get(Calendar.MINUTE) / 60;
-//        float endHour = (float) endTime.get(Calendar.HOUR_OF_DAY) + (float) endTime.get(Calendar.MINUTE) / 60;
-//        drawPaint.setColor(colors.get(filterIndex));
-//        drawPaint.setStyle(Paint.Style.FILL);
-//        Rect rectangle = new Rect();
-//        rectangle.set(textWidth + dayWidth * offset, hourHeight * 2 + (int) (startHour * hourHeight), textWidth + dayWidth * (offset + 1), hourHeight * 2 + (int) (endHour * hourHeight));
-//        canvas.drawRect(rectangle, drawPaint);
-//        if (isManager && filterIndex == 0) {
-//            drawPaint.setTextAlign(Paint.Align.CENTER);
-//            drawPaint.setColor(Color.BLACK);
-//            drawPaint.setStrokeWidth(5);
-//            drawPaint.setStyle(Paint.Style.STROKE);
-//            canvas.drawRect(rectangle, drawPaint);
-//            canvas.drawText(Integer.toString(numEmployees), textWidth + 0.5f * dayWidth + dayWidth * offset, hourHeight * 2 + (int) (.5f * (startHour + endHour) * hourHeight + 0.5f * hourHeight), drawPaint);
-//            drawPaint.setStrokeWidth(0);
-//            drawPaint.setColor(Color.WHITE);
-//            canvas.drawText(Integer.toString(numEmployees), textWidth + 0.5f * dayWidth + dayWidth * offset, hourHeight * 2 + (int) (.5f * (startHour + endHour) * hourHeight + 0.5f * hourHeight), drawPaint);
-//        }
     }
 
     private Calendar stringToCalendar(String string) {
@@ -218,12 +187,13 @@ public class CalendarDraw extends View {
 
     private Subject checkSubjectTouch(int touchDay, float touchHr, int action){
         int count = 0;
-        if(user.getIsParent()){
+//        if(user.getIsParent()){
             for(int c = 0; c < children.size(); c++){
                 ArrayList<Subject> subjects = children.get(c).getSubjects();
                 for(int s = 0; s < subjects.size(); s++){
                     if(subjects.get(s).weekdays[(dayOfWeek + touchDay - 1)%7]
-                            && filter.get(count + 1) && subjects.get(s).start <= touchHr
+                            && ((!user.getIsParent() && filter.get(count)) || (user.getIsParent()
+                            && filter.get(count + 1))) && subjects.get(s).start <= touchHr
                             && subjects.get(s).start + subjects.get(s).length >= touchHr) {
                         if(action == 1 && context != null)
                             children.get(c).save(context);
@@ -234,18 +204,6 @@ public class CalendarDraw extends View {
                 }
                 count++;
             }
-        }else {
-            ArrayList<Subject> subjects = user.getSubjects();
-            for(int s = 0; s < subjects.size(); s++){
-                if(subjects.get(s).weekdays[(dayOfWeek + touchDay - 1)%7]
-                        && filter.get(count + 1) && subjects.get(s).start <= touchHr
-                        && subjects.get(s).start + subjects.get(s).length >= touchHr) {
-                    //Log.d("CalendarDraw", "Touching: " + subjects.get(s).subjectName);
-                    return subjects.get(s);
-                }
-                count++;
-            }
-        }
         return null;
     }
 
@@ -266,21 +224,6 @@ public class CalendarDraw extends View {
         postInvalidate();
     }
 
-//    //this is called when a touch occurs on a day
-//    void editWorkDay(int day){
-//        Intent intent;
-////        if(isManager)
-////            intent = new Intent(this.getContext(), TimePreferencesManagerActivity.class);
-////        else
-////            intent = new Intent(this.getContext(), TimePreferencesEmployeeActivity.class);
-//        Calendar toEdit = (Calendar)startDate.clone();
-//        toEdit.add(Calendar.DAY_OF_MONTH, day);
-//        Gson gson = new Gson();
-//        String date = gson.toJson(toEdit.getTime());
-////        intent.putExtra("date",date);
-////        this.getContext().startActivity(intent);
-//    }
-
     public CalendarDraw(final Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -296,19 +239,15 @@ public class CalendarDraw extends View {
                 postInvalidate();
             }
         });
-
-//        setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.d("CalendarDraw",String.valueOf(event.getAction()));
-//                return true;
-//            }
-//        });
     }
 
     public void givePeople(Person user, ArrayList<Person> children){
         this.user = user;
         this.children = children;
+        if(!user.getIsParent()) {
+            this.children = new ArrayList<>();
+            this.children.add(user);
+        }
     }
 
     //called when the view changes size

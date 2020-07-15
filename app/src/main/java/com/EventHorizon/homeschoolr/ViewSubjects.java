@@ -123,7 +123,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             numLessonsText.setText("Number of lessons: "+subjects.get(subject).numLessons);
             hourMinText.setText("Time per lesson: "+subjects.get(subject).hrLength+":"+subjects.get(subject).minLength);
 
-            if(true){//user.getIsParent()) {
+            if(user.getIsParent()) {
                 //Setting button settings
                 final Button button = new Button(this);
                 button.setText("Remove");
