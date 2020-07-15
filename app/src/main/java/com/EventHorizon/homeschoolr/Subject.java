@@ -10,6 +10,7 @@ public class Subject {
     int numLessons;
     int hrLength;
     int minLength;
+    Float length = null;
     Float start = null;
 
     Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength,int minLength){
@@ -18,6 +19,7 @@ public class Subject {
         this.numLessons = numLessons;
         this.hrLength = hrLength;
         this.minLength = minLength;
+        this.length = Scheduler.hrMinToFloat(hrLength, minLength);
     }
 
     public String toString(){

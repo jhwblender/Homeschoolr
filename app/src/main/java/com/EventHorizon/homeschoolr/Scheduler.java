@@ -61,7 +61,8 @@ public class Scheduler implements TaskListener{
                 float startTry;
                 boolean good;
                 do {
-                    startTry = random.nextFloat() * 24 - hrMinToFloat(subjects.get(i).hrLength, subjects.get(i).minLength);
+
+                    startTry = random.nextFloat() * (24 - hrMinToFloat(subjects.get(i).hrLength, subjects.get(i).minLength));
                     good = checkForConflict(startTimes, endTimes, startTry);
                 }while(!good);
                 subjects.get(i).start = startTry;

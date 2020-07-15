@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -28,10 +29,9 @@ import java.util.Map;
 
 public class CalendarDraw extends View {
     private Paint drawPaint;
-    int touchX,touchY;
+    int touchX,touchY, startTouchX, startTouchY;
     boolean touching;
     boolean transitioning = false;
-    int dayTouch;
     int width, height;
     int numDays;
     int dayOfWeek;
@@ -51,6 +51,10 @@ public class CalendarDraw extends View {
     int dayWidth;
     int hourHeight;
     Context context;
+
+    //Dragging
+    float hourDiff;
+    Subject currentSubject = null;
 
     @Override
     //this is where we can draw everything
@@ -171,17 +175,64 @@ public class CalendarDraw extends View {
         touching = false;
     }
 
-//    @Override
-//    //This function grabs any touch events for our own purposes
-//    public boolean dispatchTouchEvent(MotionEvent event)
-//    {
-//        touchX = (int)event.getX();
-//        touchY = (int)event.getY();
-//        touching = true;
-//
-//        postInvalidate();
-//        return true;
-//    }
+    @Override
+    //This function grabs any touch events for our own purposes
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        //Log.d("CalendarDraw",String.valueOf(event.getAction()));
+        touchX = (int)event.getX();
+        touchY = (int)event.getY();
+
+        int touchDay = (touchX - textWidth)/dayWidth;
+        float touchHr = (float)(touchY - 2 * hourHeight)/hourHeight;
+        if(touchX > textWidth && touchY > 2 * hourHeight && event.getAction() != 2) {
+            currentSubject = checkSubjectTouch(touchDay, touchHr, event.getAction());
+        }
+
+        if(currentSubject != null && user.getIsParent()){
+            if(event.getAction() == 0)
+                hourDiff = touchHr - currentSubject.start;
+            else if(event.getAction() == 2)
+                currentSubject.start = touchHr - hourDiff;
+        }
+
+        postInvalidate();
+        return true;
+        //return super.dispatchTouchEvent(event);
+    }
+
+    private Subject checkSubjectTouch(int touchDay, float touchHr, int action){
+        int count = 0;
+        if(user.getIsParent()){
+            for(int c = 0; c < children.size(); c++){
+                ArrayList<Subject> subjects = children.get(c).getSubjects();
+                for(int s = 0; s < subjects.size(); s++){
+                    if(subjects.get(s).weekdays[(dayOfWeek + touchDay - 1)%7]
+                            && filter.get(count + 1) && subjects.get(s).start <= touchHr
+                            && subjects.get(s).start + subjects.get(s).length >= touchHr) {
+                        if(action == 1 && context != null)
+                            children.get(c).save(context);
+                        //Log.d("CalendarDraw", "Touching: " + subjects.get(s).subjectName);
+                        return subjects.get(s);
+                    }
+                    count++;
+                }
+                count++;
+            }
+        }else {
+            ArrayList<Subject> subjects = user.getSubjects();
+            for(int s = 0; s < subjects.size(); s++){
+                if(subjects.get(s).weekdays[(dayOfWeek + touchDay - 1)%7]
+                        && filter.get(count + 1) && subjects.get(s).start <= touchHr
+                        && subjects.get(s).start + subjects.get(s).length >= touchHr) {
+                    //Log.d("CalendarDraw", "Touching: " + subjects.get(s).subjectName);
+                    return subjects.get(s);
+                }
+                count++;
+            }
+        }
+        return null;
+    }
 
     void updateIfManager(boolean isManager, Context context){
         this.isManager = isManager;
@@ -217,6 +268,7 @@ public class CalendarDraw extends View {
 
     public CalendarDraw(final Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         setFocusable(true);
         setFocusableInTouchMode(true);
         setupPaint();
@@ -229,9 +281,14 @@ public class CalendarDraw extends View {
                 postInvalidate();
             }
         });
-//        family = Family.load(context);
-//        auth = new Auth((Activity)context);
-//        user = family.getMember(context, auth.getEmail());
+
+//        setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("CalendarDraw",String.valueOf(event.getAction()));
+//                return true;
+//            }
+//        });
     }
 
     public void givePeople(Person user, ArrayList<Person> children){
