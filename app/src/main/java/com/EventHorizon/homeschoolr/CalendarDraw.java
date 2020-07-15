@@ -54,6 +54,7 @@ public class CalendarDraw extends View {
 
     //Dragging
     float hourDiff;
+    int dayStart;
     Subject currentSubject = null;
 
     @Override
@@ -184,21 +185,35 @@ public class CalendarDraw extends View {
         touchY = (int)event.getY();
 
         int touchDay = (touchX - textWidth)/dayWidth;
+
         float touchHr = (float)(touchY - 2 * hourHeight)/hourHeight;
         if(touchX > textWidth && touchY > 2 * hourHeight && event.getAction() != 2) {
             currentSubject = checkSubjectTouch(touchDay, touchHr, event.getAction());
         }
 
         if(currentSubject != null && user.getIsParent()){
-            if(event.getAction() == 0)
+            if(event.getAction() == 0) {
+                dayStart = touchDay;
                 hourDiff = touchHr - currentSubject.start;
-            else if(event.getAction() == 2)
+            }else if(event.getAction() == 2) {
                 currentSubject.start = touchHr - hourDiff;
+                shiftSchedule(touchDay - dayStart, touchDay);
+            }
         }
 
         postInvalidate();
         return true;
         //return super.dispatchTouchEvent(event);
+    }
+
+    private void shiftSchedule(int days, int touchDay){
+        days += 7;
+        boolean[] subDays = currentSubject.weekdays.clone();
+        for(int i = 0; i < 7; i++){
+            subDays[(i + days)%7] = currentSubject.weekdays[i];
+        }
+        currentSubject.weekdays = subDays;
+        dayStart = touchDay;
     }
 
     private Subject checkSubjectTouch(int touchDay, float touchHr, int action){
