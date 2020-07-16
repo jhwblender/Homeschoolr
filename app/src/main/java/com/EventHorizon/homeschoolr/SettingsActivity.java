@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -56,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         emailView.setText(email);
 
         family = Family.load(this);
+        user = family.getMember(this, email);
         ArrayList<Person> users = family.getMembers(this);
 
         familyNameView.setText(family.getFamilyName());
@@ -102,7 +104,9 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         public void onClick(DialogInterface dialog, int which) {
             if(which==DialogInterface.BUTTON_POSITIVE) {
                 functions.loadingView(true);
-                user.deleteAccount(auth.getEmail(), context);
+                if(user == null)
+                    Log.d("SettingsActivity","USER IS NULL!");
+                user.deleteAccount(auth.getEmail(), context); //todo fix acct deletion
                 family.removeMember(auth.getEmail(),context);
             }else
                 functions.showMessage(getString(R.string.deleteCancel),false);
