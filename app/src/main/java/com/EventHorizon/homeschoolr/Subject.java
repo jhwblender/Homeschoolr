@@ -10,11 +10,12 @@ public class Subject {
     int numLessons;
     int hrLength;
     int minLength;
+    int lessonsCompleted = 0;
     Float length = null;
     Float start = null;
     float timeWorked = 0;
 
-    Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength, int minLength, float timeWorked){
+    Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength, int minLength, float timeWorked, int lessonsCompleted){
         this.subjectName = subjectName;
         this.weekdays = weekDays;
         this.numLessons = numLessons;
@@ -22,6 +23,7 @@ public class Subject {
         this.minLength = minLength;
         this.length = Scheduler.hrMinToFloat(hrLength, minLength);
         this.timeWorked = timeWorked;
+        this.lessonsCompleted = lessonsCompleted;
     }
 
     public String toString(){

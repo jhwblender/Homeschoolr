@@ -3,6 +3,7 @@ package com.EventHorizon.homeschoolr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
     ArrayList<Switch> timers;
     ArrayList<TextView> timerText;
     ArrayList<Subject> timerSubjects;
+
+    String exportString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,13 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
         functions.goToActivity(CalendarActivity.class);
     }
 
-
+    public void share(View view){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, exportString);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 
     private void loadChildrenSubjects(){
         ArrayList<Person> members = family.getMembers(this);
@@ -85,6 +94,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
         personText.setText(child.getName());
         personText.setTextSize(30);
         theList.addView(personText);
+        exportString += "-------------------\n" + child.getName() + "\n"
+                + "-------------------\n";
 
         final ArrayList<Subject> subjects = child.getSubjects();
         for(int subject = 0; subject < subjects.size(); subject++){
@@ -97,6 +108,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             subjectText.setText(subjects.get(subject).subjectName);
             subjectText.setTextSize(20);
             tableRow.addView(subjectText);
+            exportString += "----------\n" + subjects.get(subject).subjectName + "\n"
+                    + "----------\n";
 
             //Setting start time text
             final TextView startTimeText = new TextView(this);
@@ -104,42 +117,42 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             startTime += Scheduler.floatToHrMin(subjects.get(subject).start);
             startTimeText.setText(startTime);
             startTimeText.setTextSize(15);
+            exportString += startTime + "\n";
 
             //Setting days text
             final TextView dayText = new TextView(this);
-            try {
-                dayText.setTextSize(15);
-                String[] days = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
-                String text = "days: ";
-                boolean[] lessonDays = subjects.get(subject).weekdays;
-                for (int day = 0; day < lessonDays.length; day++) {
-                    if (lessonDays[day])
-                        text += days[day] + ", ";
-                }
-                dayText.setText(text);
-            }catch(Exception e){
-                Log.d("ViewSubjects",e.getMessage());
+            dayText.setTextSize(15);
+            String[] days = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
+            String text = "days: ";
+            boolean[] lessonDays = subjects.get(subject).weekdays;
+            for (int day = 0; day < lessonDays.length; day++) {
+                if (lessonDays[day])
+                    text += days[day] + ", ";
             }
+            dayText.setText(text);
+            exportString += text + "\n";
 
             //Setting numLessons and Hour/Min Length
             final TextView numLessonsText = new TextView(this);
             final TextView hourMinText = new TextView(this);
-            numLessonsText.setText("Number of lessons: "+subjects.get(subject).numLessons);
-            hourMinText.setText("Time per lesson: "+subjects.get(subject).hrLength+":"+subjects.get(subject).minLength);
+            String numLessonsString = "Number of lessons: "+subjects.get(subject).numLessons;
+            numLessonsText.setText(numLessonsString);
+            exportString += numLessonsString + "\n";
+            String timePerLessonString = "Time per lesson: "+subjects.get(subject).hrLength+":"
+                    +subjects.get(subject).minLength;
+            hourMinText.setText(timePerLessonString);
+            exportString += timePerLessonString + "\n";
 
-//            //Time Clock
-//            final TextView timeClock = new TextView(this);
-//            float time = subjects.get(subject).timeWorked;
-//            String timeStr = Scheduler.floatToHrMinSec(time);
-//            timeClock.setText("Time Clocked: "+timeStr);
-//            timeClock.setTextSize(20);
-//            subjects.add(subjects.get(subject));
 
-            TextView timeClock = new TextView(this);
+            //Time Clock text
+            final TextView timeClock = new TextView(this);
             timeClock.setTextSize(17);
             float time = subjects.get(subject).timeWorked;
             String timeStr = Scheduler.floatToHrMinSec(time);
-            timeClock.setText("Time Clocked: "+timeStr);
+            String timeClockString = "Time Clocked: "+timeStr;
+            timeClock.setText(timeClockString);
+            timerText.add(timeClock);
+            exportString += timeClockString + "\n";
 
             if(user.getIsParent()) {
                 //Setting button settings
@@ -159,7 +172,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                         numLessonsText.setVisibility(View.GONE);
                         hourMinText.setVisibility(View.GONE);
                         startTimeText.setVisibility(View.GONE);
-                        //timeClock.setVisibility(View.GONE);
+                        timeClock.setVisibility(View.GONE);
                     }
                 });
 
