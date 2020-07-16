@@ -154,8 +154,8 @@ public class CalendarDraw extends View {
         touchY = (int)event.getY();
 
         int touchDay = (touchX - textWidth)/dayWidth;
-
         float touchHr = (float)(touchY - 2 * hourHeight)/hourHeight;
+
         if(touchX > textWidth && touchY > 2 * hourHeight && event.getAction() != 2) {
             currentSubject = checkSubjectTouch(touchDay, touchHr, event.getAction());
         }
@@ -166,6 +166,7 @@ public class CalendarDraw extends View {
                 hourDiff = touchHr - currentSubject.start;
             }else if(event.getAction() == 2) {
                 currentSubject.start = touchHr - hourDiff;
+                currentSubject.start = Math.round((currentSubject.start/(5.0/60.0)))*(5.0f/60.0f);
                 shiftSchedule(touchDay - dayStart, touchDay);
             }
         }

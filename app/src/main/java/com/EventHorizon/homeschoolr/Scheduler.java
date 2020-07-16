@@ -30,7 +30,26 @@ public class Scheduler implements TaskListener{
         return (int)time;
     }
     public static int floatToMin(float time){
-        return (int)(60 * (time - (int)time));
+        return (int)(60 * (time - floatToHr(time)));
+    }
+    public static int floatToSec(float time){
+        return (int)(3600 * ((time - floatToHr(time)) - floatToMin(time)/60.0));
+    }
+    public static String floatToHrMinSec(float time){
+        int hr = floatToHr(time);
+        int min = floatToMin(time);
+        int sec = floatToSec(time);
+        String hrStr = (hr < 10)? "0"+String.valueOf(hr) : String.valueOf(hr);
+        String minStr = (min < 10)? "0"+String.valueOf(min) : String.valueOf(min);
+        String secStr = (sec < 10)? "0"+String.valueOf(sec) : String.valueOf(sec);
+        return hrStr+":"+minStr+":"+secStr;
+    }
+    public static String floatToHrMin(float time){
+        int hr = floatToHr(time);
+        int min = floatToMin(time);
+        String hrStr = (hr < 10)? "0"+String.valueOf(hr) : String.valueOf(hr);
+        String minStr = (min < 10)? "0"+String.valueOf(min) : String.valueOf(min);
+        return hrStr+":"+minStr;
     }
 
     private boolean checkForConflict(ArrayList<Float> startTimes, ArrayList<Float> endTimes, float startTry){
