@@ -178,7 +178,7 @@ public class CalendarDraw extends View {
 
     private void shiftSchedule(int days, int touchDay){
         days += 7;
-        boolean[] subDays = currentSubject.weekdays.clone();
+        Boolean[] subDays = currentSubject.weekdays.clone();
         for(int i = 0; i < 7; i++){
             subDays[(i + days)%7] = currentSubject.weekdays[i];
         }

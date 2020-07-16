@@ -46,16 +46,15 @@ public class Person
     public String getFamilyName(){
         return familyName;
     }
-    public void addSubject(Context context, String subjectName, int numLessons, boolean[] weekDays ,int hrLength,int minLength){
+    public void addSubject(Context context, String subjectName, int numLessons, Boolean[] weekDays ,int hrLength,int minLength){
         if(subjects == null)
             subjects = new ArrayList<>();
-        subjects.add(new Subject(subjectName, numLessons, weekDays, hrLength, minLength, 0));
+        subjects.add(new Subject(subjectName, numLessons, weekDays, hrLength, minLength, 0.0f, 0));
         save(context);
     }
     public ArrayList<Subject> getSubjects(){
         return subjects;
     }
-
 
     public void deleteAccount(String email, final Context context){
         unsave(context);
@@ -132,7 +131,7 @@ public class Person
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful())
-                    Log.e("Person",task.getException().getMessage());
+                    Log.e("Person","DB Error: "+task.getException().getMessage());
                 else
                     if(context != null)
                         ((TaskListener)context).authResult(TaskName.DB_USER_SAVED_SUCCESSFULLY);

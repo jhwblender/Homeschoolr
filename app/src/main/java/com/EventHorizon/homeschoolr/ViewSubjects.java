@@ -34,6 +34,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
 
     String exportString = "";
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
     @Override
     protected void onStart() {
         super.onStart();
+
+        context = this;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             dayText.setTextSize(15);
             String[] days = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
             String text = "days: ";
-            boolean[] lessonDays = subjects.get(subject).weekdays;
+            Boolean[] lessonDays = subjects.get(subject).weekdays;
             for (int day = 0; day < lessonDays.length; day++) {
                 if (lessonDays[day])
                     text += days[day] + ", ";
@@ -132,17 +136,24 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             dayText.setText(text);
             exportString += text + "\n";
 
-            //Setting numLessons and Hour/Min Length
+            //Setting numLessons
             final TextView numLessonsText = new TextView(this);
-            final TextView hourMinText = new TextView(this);
             String numLessonsString = "Number of lessons: "+subjects.get(subject).numLessons;
             numLessonsText.setText(numLessonsString);
             exportString += numLessonsString + "\n";
+
+            //Lessons Completed Text
+            final TextView lessonsCompleted = new TextView(this);
+            String lessonsCompletedString = "Lessons Completed: "+subjects.get(subject).lessonsCompleted;
+            lessonsCompleted.setText(lessonsCompletedString);
+            exportString += lessonsCompletedString + "\n";
+
+            //Setting hour and minute length
+            final TextView hourMinText = new TextView(this);
             String timePerLessonString = "Time per lesson: "+subjects.get(subject).hrLength+":"
                     +subjects.get(subject).minLength;
             hourMinText.setText(timePerLessonString);
             exportString += timePerLessonString + "\n";
-
 
             //Time Clock text
             final TextView timeClock = new TextView(this);
@@ -154,13 +165,44 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             timerText.add(timeClock);
             exportString += timeClockString + "\n";
 
+            //Completed Button
+            if(subjects.get(subject).completedChild == null)
+                subjects.get(subject).completedChild = false;
+            if(!user.getIsParent() || subjects.get(subject).completedChild) {
+                final Button completedButton = new Button(this);
+                completedButton.setText("Completed");
+                tableRow.addView(completedButton);
+                if(!user.getIsParent() && subjects.get(subject).completedChild)
+                    completedButton.setEnabled(false);
+                final int finalSubject = subject;
+                final int finalIndex = index;
+                completedButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (user.getIsParent()){
+                            subjects.get(finalSubject).lessonsCompleted++;
+                            subjects.get(finalSubject).completedChild = false;
+                            String lessonsCompletedString = "Lessons Completed: "+subjects
+                                    .get(finalSubject).lessonsCompleted;
+                            lessonsCompleted.setText(lessonsCompletedString);
+                            completedButton.setVisibility(View.GONE);
+                        }else{
+                            subjects.get(finalSubject).completedChild = true;
+                            completedButton.setEnabled(false);
+                        }
+                        members.get(finalIndex).save(context);
+                    }
+                });
+            }
+
             if(user.getIsParent()) {
                 //Setting button settings
                 final Button button = new Button(this);
                 button.setText("Remove");
                 button.setTextColor(Color.RED);
+                tableRow.addView(button);
+
                 final int finalI = subject;
-                final Context context = this;
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -173,12 +215,11 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                         hourMinText.setVisibility(View.GONE);
                         startTimeText.setVisibility(View.GONE);
                         timeClock.setVisibility(View.GONE);
+                        lessonsCompleted.setVisibility(View.GONE);
                     }
                 });
-
-                tableRow.addView(button);
-                //theList.addView(button);
             }else{
+                //Timer Toggle
                 Switch timerToggle = new Switch(this);
                 timerToggle.setChecked(false);
                 final Context context = this;
@@ -202,6 +243,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             theList.addView(numLessonsText);
             theList.addView(hourMinText);
             theList.addView(startTimeText);
+            theList.addView(lessonsCompleted);
 //            subjectText.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -218,7 +260,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             public void run() {
                 for(int i = 0; i < timers.size(); i++){
                     if(timers.get(i).isChecked())
-                        timerSubjects.get(i).timeWorked += (1.0/3600);
+                        timerSubjects.get(i).timeWorked += (float)(1.0/3600.0);
                         float time = timerSubjects.get(i).timeWorked;
                         String timeStr = Scheduler.floatToHrMinSec(time);
                         timerText.get(i).setText("Time Clocked: "+timeStr);

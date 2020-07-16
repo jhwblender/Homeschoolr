@@ -6,16 +6,17 @@ import java.util.Calendar;
 
 public class Subject {
     String subjectName;
-    boolean[] weekdays;
-    int numLessons;
-    int hrLength;
-    int minLength;
-    int lessonsCompleted = 0;
+    Boolean[] weekdays;
+    Integer numLessons;
+    Integer hrLength;
+    Integer minLength;
+    Integer lessonsCompleted = 0;
     Float length = null;
     Float start = null;
-    float timeWorked = 0;
+    Float timeWorked = 0.0f;
+    Boolean completedChild = false;
 
-    Subject(String subjectName, int numLessons, boolean[] weekDays, int hrLength, int minLength, float timeWorked, int lessonsCompleted){
+    Subject(String subjectName, Integer numLessons, Boolean[] weekDays, Integer hrLength, Integer minLength, Float timeWorked, Integer lessonsCompleted){
         this.subjectName = subjectName;
         this.weekdays = weekDays;
         this.numLessons = numLessons;

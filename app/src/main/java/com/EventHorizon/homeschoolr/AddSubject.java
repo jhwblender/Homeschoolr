@@ -77,7 +77,7 @@ public class AddSubject extends AppCompatActivity implements TaskListener{
         Person child = family.getMemberByName(this,((Spinner)findViewById(R.id.childrenSpinner)).getSelectedItem().toString());
         String subjectName = ((EditText)findViewById(R.id.subject)).getText().toString();
         int numLessons = Integer.parseInt(((EditText)findViewById(R.id.numLessons)).getText().toString());
-        boolean days[] = new boolean[7];
+        Boolean days[] = new Boolean[7];
         days[0] = ((CheckBox)findViewById(R.id.sundayCheckBox)).isChecked();
         days[1] = ((CheckBox)findViewById(R.id.mondayCheckBox)).isChecked();
         days[2] = ((CheckBox)findViewById(R.id.tuesdayCheckBox)).isChecked();
