@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 public class LoginActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
@@ -29,6 +30,9 @@ public class LoginActivity extends AppCompatActivity implements TaskListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        functions = new Functions(this);
+        functions.adInit(true);
     }
 
     @Override
@@ -36,7 +40,6 @@ public class LoginActivity extends AppCompatActivity implements TaskListener {
         super.onStart();
 
         auth = new Auth(this);
-        functions = new Functions(this);
         signInButton = findViewById(R.id.signInButton);
         loadingSymbol = findViewById(R.id.loadingSymbol);
         usernameView = findViewById(R.id.nameText);

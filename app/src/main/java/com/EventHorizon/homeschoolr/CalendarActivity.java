@@ -15,6 +15,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +57,9 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
         setContentView(R.layout.activity_calendar);
 
         auth = new Auth(this);
+        family = Family.load(this);
+        functions = new Functions(this);
+
         addSubjectButton = findViewById(R.id.addSubjectButton);
         filterToggle = findViewById(R.id.filterToggle);
         filterView = findViewById(R.id.filterView);
@@ -58,7 +67,7 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
         startDateView =  findViewById(R.id.startDate);
         endDateView = findViewById(R.id.endDate);
         numDaysView = findViewById(R.id.numDays);
-        functions = new Functions(this);
+
 
         filterColors = new ArrayList<>();
         filterChecks = new ArrayList<>();
@@ -72,7 +81,6 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
         endDate = Calendar.getInstance();
         endDate.add(Calendar.DAY_OF_MONTH, numDays);
         updateDates();
-        family = Family.load(this);
         scheduler = new Scheduler(this, family);
         if(family == null)
             Log.e("CalendarActivity","Family loaded as null");
@@ -98,8 +106,10 @@ public class CalendarActivity extends AppCompatActivity implements TaskListener{
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("CalendarActivity","Calendar Activity starting");
 
+        functions.adInit(family.getMember(this, auth.getEmail()));
+
+        Log.d("CalendarActivity","Calendar Activity starting");
     }
 
 

@@ -26,7 +26,12 @@ public class AddSubject extends AppCompatActivity implements TaskListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_subject);
+
         functions = new Functions(this);
+        auth = new Auth(this);
+        family = Family.load(this);
+        user = Person.load(this, auth.getEmail());
+        functions.adInit(user);
 
         childrenSpinner = findViewById(R.id.childrenSpinner);
         hrSpinner = findViewById(R.id.hrSpinner);
@@ -36,9 +41,6 @@ public class AddSubject extends AppCompatActivity implements TaskListener{
     @Override
     protected void onStart() {
         super.onStart();
-        auth = new Auth(this);
-        family = Family.load(this);
-        user = Person.load(this, auth.getEmail());
 
         populateChildList();
         populateHrSpinner();

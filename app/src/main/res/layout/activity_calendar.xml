@@ -1,159 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".CalendarActivity">
 
-    <LinearLayout
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-6579091093181482/9371296902" />
+
+    <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TableRow
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings"
+            android:onClick="goToSettingsActivity"
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+        <Button
+            android:id="@+id/backOneUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="dayBack"
+            android:text="@string/backArrow" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:text="@string/daysToShow"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/numDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/daysOfWeek"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/forwardOneUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="dayForward"
+            android:text="@string/forwardArrow" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/goToToday"
+            android:onClick="resetDates"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/dateRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/startDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/dummyDate"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/toText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to" />
+
+        <TextView
+            android:id="@+id/endDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/dummyDate"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/viewSubjectsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:onClick="goToViewSubjectsActivity"
+            android:text="@string/viewSubjects" />
+
+        <ToggleButton
+            android:id="@+id/filterToggle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:onClick="filterToggle"
+            android:text="@string/filterToggle"
+            android:textOff="@string/filterToggle"
+            android:textOn="@string/filterToggle"
+            android:textSize="12sp" />
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/settings"
-                android:onClick="goToSettingsActivity"
-                app:srcCompat="@android:drawable/ic_menu_preferences" />
+        <Button
+            android:id="@+id/addSubjectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:onClick="goToAddSubjectActivity"
+            android:text="@string/addSubject" />
 
-            <Button
-                android:id="@+id/backOneUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="dayBack"
-                android:text="@string/backArrow" />
+    </TableRow>
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:text="@string/daysToShow"
-                android:textSize="18sp" />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <Spinner
-                android:id="@+id/numDays"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/daysOfWeek"
-                android:spinnerMode="dropdown" />
-
-            <Button
-                android:id="@+id/forwardOneUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="dayForward"
-                android:text="@string/forwardArrow" />
-
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/goToToday"
-                android:onClick="resetDates"
-                app:srcCompat="@android:drawable/ic_menu_mylocation" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/dateRow"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/filterView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:flexWrap="wrap" />
+    </TableRow>
 
-            <TextView
-                android:id="@+id/startDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="@string/dummyDate"
-                android:textAlignment="center"
-                android:textStyle="bold" />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/toText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/to" />
-
-            <TextView
-                android:id="@+id/endDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="@string/dummyDate"
-                android:textAlignment="center"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow
+        <com.EventHorizon.homeschoolr.CalendarDraw
+            android:id="@+id/drawView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent" />
 
-            <Button
-                android:id="@+id/viewSubjectsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="0dp"
-                android:onClick="goToViewSubjectsActivity"
-                android:text="@string/viewSubjects" />
+    </TableRow>
 
-            <ToggleButton
-                android:id="@+id/filterToggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="0dp"
-                android:onClick="filterToggle"
-                android:text="@string/filterToggle"
-                android:textOff="@string/filterToggle"
-                android:textOn="@string/filterToggle"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/addSubjectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="0dp"
-                android:onClick="goToAddSubjectActivity"
-                android:text="@string/addSubject" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/filterView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:flexWrap="wrap" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.EventHorizon.homeschoolr.CalendarDraw
-                android:id="@+id/drawView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </TableRow>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

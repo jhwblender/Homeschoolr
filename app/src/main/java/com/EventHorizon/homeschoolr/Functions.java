@@ -16,6 +16,12 @@ import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 public class Functions {
     private Activity context;
 
@@ -76,5 +82,28 @@ public class Functions {
         else
             showMessage(context.getString(R.string.badPasswordFormat),false);
         return false;
+    }
+
+    public void adInit(boolean show){
+        AdView mAdView;
+        mAdView = context.findViewById(R.id.adView);
+        if(show){
+            //String appID = "ca-app-pub-6579091093181482~2242781779";
+            //String adUnitID = "ca-app-pub-6579091093181482/9371296902";
+            //String testID = "ca-app-pub-3940256099942544/6300978111";
+
+            MobileAds.initialize(context, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
+    }
+    public void adInit(Person user){
+        adInit(user.getShowAds());
     }
 }

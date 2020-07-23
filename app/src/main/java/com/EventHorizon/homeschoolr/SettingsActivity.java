@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
     TextView emailView;
     TextView nameView;
     TextView familyNameView;
+    Switch adSwitch;
+    boolean adChanged = false;
     TableRow enterEmailDialog;
     EditText inviteEmail;
     String email;
@@ -38,13 +41,18 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        auth = new Auth(this);
+        email = auth.getEmail();
+        family = Family.load(this);
+        user = family.getMember(this, email);
+        functions = new Functions(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        auth = new Auth(this);
-        functions = new Functions(this);
+
+        functions.adInit(user);
 
         nameView = findViewById(R.id.name);
         emailView = findViewById(R.id.email);
@@ -53,11 +61,10 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         inviteEmail = findViewById(R.id.inviteEmail);
         inviteContainer = findViewById(R.id.inviteContainer);
         memberContainer = findViewById(R.id.memberContainer);
-        email = auth.getEmail();
-        emailView.setText(email);
+        adSwitch = findViewById(R.id.adSwitch);
+        adSwitch.setChecked(user.getShowAds());
 
-        family = Family.load(this);
-        user = family.getMember(this, email);
+        emailView.setText(email);
         ArrayList<Person> users = family.getMembers(this);
 
         familyNameView.setText(family.getFamilyName());
@@ -71,6 +78,14 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         populateMembers();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(!adChanged)
+            super.onBackPressed();
+        else
+            functions.goToActivity(CalendarActivity.class);
+    }
+
     //Logout button clicked
     public void logout(View view){
         family.unsave(this);
@@ -78,12 +93,43 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         functions.goToActivity(LoginActivity.class);
     }
 
+    public void adsToggled(View view){
+        Switch adSwitch = (Switch)view;
+        if(adSwitch.isChecked()){ //todo add strings
+            functions.showMessage(getString(R.string.adsOnThankYou));
+            user.setShowAds(true, this);
+            functions.adInit(user);
+            findViewById(R.id.adView).setVisibility(View.VISIBLE);
+            adChanged = true;
+        }else{
+            AlertDialog.Builder builder= new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.adsOffConfirmation))
+                    .setPositiveButton(getString(R.string.yes), turnOffAdsPopup)
+                    .setNegativeButton(getString(R.string.no), turnOffAdsPopup).show();
+        }
+    }
+
+    //Verification to turn off ads
+    DialogInterface.OnClickListener turnOffAdsPopup = new DialogInterface.OnClickListener(){
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if(which==DialogInterface.BUTTON_POSITIVE) {
+                user.setShowAds(false, context);
+                findViewById(R.id.adView).setVisibility(View.GONE);
+                adChanged = true;
+            }else{
+                functions.showMessage(getString(R.string.adsOnThankYou));
+                adSwitch.setChecked(true);
+            }
+        }
+    };
+
     //Delete Account button clicked
     public void deleteAccount(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.deleteConfirmation))
-                .setPositiveButton(getString(R.string.yes),dialogClickListener)
-                .setNegativeButton(getString(R.string.no),dialogClickListener).show();
+                .setPositiveButton(getString(R.string.yes), deleteAccountPopup)
+                .setNegativeButton(getString(R.string.no), deleteAccountPopup).show();
     }
 
     public void addInvite(View view){
@@ -99,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
     //Verification for account deletion
     Context context = this;
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener(){
+    DialogInterface.OnClickListener deleteAccountPopup = new DialogInterface.OnClickListener(){
         @Override
         public void onClick(DialogInterface dialog, int which) {
             if(which==DialogInterface.BUTTON_POSITIVE) {
@@ -112,6 +158,8 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
                 functions.showMessage(getString(R.string.deleteCancel),false);
         }
     };
+
+
 
     public void deleteInvite(View view){
         String email = ((TextView)((TableRow)view.getParent()).getChildAt(0)).getText().toString();

@@ -49,6 +49,7 @@ public class RegisterMoreActivity extends AppCompatActivity implements TaskListe
 
         auth = new Auth(this);
         functions = new Functions(this);
+        functions.adInit(true);
     }
 
     @Override
@@ -124,13 +125,13 @@ public class RegisterMoreActivity extends AppCompatActivity implements TaskListe
 
     private void createUser(){
         //todo create user
-        Person user = new Person(auth.getEmail(), isParent, name, familyName);
+        Person user = new Person(auth.getEmail(), isParent, name, familyName, true);
         Family fam = new Family(familyName, auth.getEmail(), this);
         functions.goToActivity(LoginActivity.class);
     }
 
     private void addUserToFamily(){
-        Person user = new Person(auth.getEmail(), isParent, name, familyName);
+        Person user = new Person(auth.getEmail(), isParent, name, familyName, true);
         Family.download(this, familyName, this);
     }
 

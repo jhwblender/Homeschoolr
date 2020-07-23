@@ -47,9 +47,10 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
         timerSubjects = new ArrayList<>();
 
         auth = new Auth(this);
-        functions = new Functions(this);
         family = Family.load(this);
         user = family.getMember(this, auth.getEmail());
+        functions = new Functions(this);
+        functions.adInit(user);
 
         if(user.getIsParent()) {
             loadChildrenSubjects();

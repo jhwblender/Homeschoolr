@@ -19,6 +19,7 @@ public class RegisterActivity extends AppCompatActivity implements TaskListener 
         setContentView(R.layout.activity_register);
         auth = new Auth(this);
         functions = new Functions(this);
+        functions.adInit(true);
     }
 
     @Override

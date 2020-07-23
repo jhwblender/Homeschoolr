@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -23,14 +24,16 @@ public class Person
     private String email;
     private String familyName;
     private boolean isParent;
+    private boolean showAds = true;
     ArrayList<Subject> subjects;
 
-    public Person(String email, boolean isParent, String name, String familyName){
+    public Person(String email, boolean isParent, String name, String familyName, boolean showAds){
         subjects = new ArrayList<>();
         this.email = email;
         this.isParent = isParent;
         this.name = name;
         this.familyName = familyName;
+        this.showAds = showAds;
         upload();
     }
 
@@ -43,6 +46,8 @@ public class Person
     public boolean getIsParent(){
         return isParent;
     }
+    public boolean getShowAds(){return showAds;}
+    public void setShowAds(boolean showAds, Context context){this.showAds = showAds; save(context);}
     public String getFamilyName(){
         return familyName;
     }
