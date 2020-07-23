@@ -33,7 +33,7 @@
             android:textSize="36sp" />
     </TableRow>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -301,7 +301,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Toggle Ads"
+                    android:text="@string/toggleAds"
                     android:textSize="18sp" />
 
                 <Space
@@ -317,34 +317,21 @@
                     android:onClick="adsToggled" />
             </TableRow>
 
-            <TableRow
-                android:id="@+id/LogOut"
+            <Button
+                android:id="@+id/signOutButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:onClick="logout"
+                android:text="@string/signOut" />
 
-                <Button
-                    android:id="@+id/signOutButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="logout"
-                    android:text="@string/signOut" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/deleteAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/deleteAccountButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34sp"
-                    android:onClick="deleteAccount"
-                    android:text="@string/deleteAccount"
-                    android:textColor="#FF0000"
-                    android:textSize="12sp" />
-
-            </TableRow>
+            <Button
+                android:id="@+id/deleteAccountButton"
+                android:layout_width="wrap_content"
+                android:layout_height="34sp"
+                android:onClick="deleteAccount"
+                android:text="@string/deleteAccount"
+                android:textColor="#FF0000"
+                android:textSize="12sp" />
 
             <View
                 android:id="@+id/dividerAccountSettings2"
@@ -352,11 +339,82 @@
                 android:layout_height="20sp"
                 android:background="?android:attr/listDivider" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/donateText" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/buttonBarButtonStyle">
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/paypal_logo"
+                    android:onClick="paypalClicked" />
+
+                <Button
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:background="@drawable/patreon_logopng"
+                    android:onClick="patreonClicked"
+                    style="?android:attr/buttonBarButtonStyle"/>
+            </TableRow>
+
+            <View
+                android:id="@+id/dividerAccountSettings3"
+                android:layout_width="match_parent"
+                android:layout_height="20sp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/support"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/supportText" />
+
+            <TableRow
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/facebook_icon"
+                    android:onClick="facebookClicked" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:background="@drawable/mail_icon"
+                    android:onClick="mailClicked" />
+            </TableRow>
+
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="90dp" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

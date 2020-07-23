@@ -6,6 +6,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +37,9 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
     Person user;
     Family family;
+
+    ArrayList<String> invited;
+    ArrayList<Person> members;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +79,10 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
             findViewById(R.id.invitedFamilyMembers).setVisibility(View.GONE);
         }
 
-        populateInvites();
-        populateMembers();
+        if(invited == null)
+            populateInvites();
+        if(members == null)
+            populateMembers();
     }
 
     @Override
@@ -93,6 +100,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         functions.goToActivity(LoginActivity.class);
     }
 
+    //Ad management starts here
     public void adsToggled(View view){
         Switch adSwitch = (Switch)view;
         if(adSwitch.isChecked()){ //todo add strings
@@ -122,7 +130,33 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
                 adSwitch.setChecked(true);
             }
         }
-    };
+    }; //end ad management
+
+    public void paypalClicked(View view){
+        goToUrl("https://www.paypal.me/jhwblender");
+    }
+    public void patreonClicked(View view){
+        goToUrl("https://www.patreon.com/jhwblender");
+    }
+    public void facebookClicked(View view){
+        goToUrl("https://www.facebook.com/groups/homeschoolr");
+    }
+    public void mailClicked(View view){
+        String[] addresses = {auth.getEmail(),"jhwblender@gmail.com"};
+        String subject = "Help with Homeschoolr";
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+    private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
 
     //Delete Account button clicked
     public void deleteAccount(View view){
@@ -168,7 +202,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
     }
 
     public void populateInvites(){
-        ArrayList<String> invited = family.getInviteEmailList();
+        invited = family.getInviteEmailList();
         for(int i = 0; i < invited.size(); i++) {
             addInvite(invited.get(i));
         }
@@ -185,7 +219,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
     }
 
     public void populateMembers(){
-        ArrayList<Person> members = family.getMembers(this);
+        members = family.getMembers(this);
         for(int i = 0; i < members.size(); i++) {
             addMember(members.get(i).getName());
         }
