@@ -23,6 +23,9 @@ public class Scheduler implements TaskListener{
         }
     }
 
+    public static float hrMinSecToFloat(int hr, int min, int sec){
+        return (float)hr + (float)min/60.0f + (float)sec/3600.0f;
+    }
     public static float hrMinToFloat(int hr, int min){
         return (float)hr + (float)min/60.0f;
     }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -94,6 +95,11 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                 loadSubjects(members, i);
     }
     private void loadSubjects(final ArrayList<Person> members, final int index){
+        Space space = new Space(this);
+        space.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                , 30));
+        theList.addView(space);
+
         child = members.get(index);
         TextView personText = new TextView(this);
         personText.setText(child.getName());
@@ -104,6 +110,11 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
 
         final ArrayList<Subject> subjects = child.getSubjects();
         for(int subject = 0; subject < subjects.size(); subject++){
+            Space space2 = new Space(this);
+            space2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                    , 15));
+            theList.addView(space2);
+
             TableRow tableRow = new TableRow(this);
             tableRow.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
                     , ViewGroup.LayoutParams.MATCH_PARENT));
@@ -111,6 +122,19 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             //Setting subject text
             final TextView subjectText = new TextView(this);
             subjectText.setText(subjects.get(subject).subjectName);
+            final int tempSubject = subject;
+            final String childEmail = child.getEmail();
+            if(user.getIsParent()) {
+                subjectText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, EditSubject.class);
+                        intent.putExtra("child", childEmail);
+                        intent.putExtra("subjectIndex", tempSubject);
+                        startActivity(intent);
+                    }
+                });
+            }
             subjectText.setTextSize(20);
             tableRow.addView(subjectText);
             exportString += "----------\n" + subjects.get(subject).subjectName + "\n"
@@ -196,30 +220,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                 });
             }
 
-            if(user.getIsParent()) {
-                //Setting button settings
-                final Button button = new Button(this);
-                button.setText("Remove");
-                button.setTextColor(Color.RED);
-                tableRow.addView(button);
-
-                final int finalI = subject;
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        subjects.remove(finalI);
-                        members.get(index).save(context);
-                        button.setVisibility(View.GONE);
-                        subjectText.setVisibility(View.GONE);
-                        dayText.setVisibility(View.GONE);
-                        numLessonsText.setVisibility(View.GONE);
-                        hourMinText.setVisibility(View.GONE);
-                        startTimeText.setVisibility(View.GONE);
-                        timeClock.setVisibility(View.GONE);
-                        lessonsCompleted.setVisibility(View.GONE);
-                    }
-                });
-            }else{
+            if(!user.getIsParent()) {
                 //Timer Toggle
                 Switch timerToggle = new Switch(this);
                 timerToggle.setChecked(false);

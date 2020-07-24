@@ -42,7 +42,7 @@
     <string name="adsOffConfirmation">Developing and maintaining Homeschoolr takes a lot of time and effort. By turning the ads off, you will no longer be doing your small part in helping to keep Homeschoolr happy and updated.\nAre you sure you want to turn the ads off?</string>
     <string name="adsOnThankYou">"Thank you! :) Your contribution\ndoes not go unnoticed"</string>
     <string name="about">About</string>
-    <string name="donateText">If you like what I do, consider a one time donation on Paypal. Or if you really like what I do; A monthly donation on Patreon would make me more than appreciative.\nIf you want to help out but don\'t want to pay money, consider leaving the ads on to help support Homeschoolr\'s future.</string>
+    <string name="donateText">If you like what I do, consider a one time donation on Paypal. Or if you really like what I do; A monthly donation on Patreon would make me more than appreciated.\nIf you want to help out but don\'t want to pay money, consider leaving the ads on to help support Homeschoolr\'s future.</string>
     <string name="support">Support</string>
     <string name="supportText">If you need help of any kind or want to submit a bug report or suggestion; Feel free to go to our social media page or email me personally.</string>
     <string name="yes">Yes</string>
@@ -81,7 +81,7 @@
     <string name="length">Length</string>
     <string name="hours">hr</string>
     <string name="minutes">min</string>
-    <string name="go">Go forth and make ye yonder activities</string>
+    <string name="addSubjectButton">Go forth and make ye yonder subject</string>
     <string name="and">and</string>
     <!--Calendar Activity-->
     <string name="backArrow">&lt;-</string>
@@ -103,4 +103,15 @@
     <string name="dummyDate">5/5/55</string>
     <string name="viewSubjects">View subjects</string>
     <string name="subjects">Subjects</string>
+    <!--Edit Subject Activity-->
+    <string name="editSubject">Edit Subject</string>
+    <string name="editSubjectButton">Go forth and edit ye yonder subject</string>
+    <string name="deleteSubject">Delete Subject</string>
+    <string name="deleteSubjectConfirmation">This will delete all data associated with this subject\nthis is not recoverable.\n\nAre you sure you want to continue?</string>
+    <string name="deleteSubjectCancel">Subject deletion canceled</string>
+    <string name="lessonsCompleted">Lessons Completed</string>
+    <string name="timeStart">Start time</string>
+    <string name="colon">:</string>
+    <string name="seconds">Sec</string>
+    <string name="timeClock">Time clock</string>
 </resources>

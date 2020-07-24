@@ -166,17 +166,6 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
                 .setNegativeButton(getString(R.string.no), deleteAccountPopup).show();
     }
 
-    public void addInvite(View view){
-        String inviteEmailString = inviteEmail.getText().toString();
-        if(!functions.checkEmail(inviteEmail.getText().toString()))
-            return;
-        else {
-            inviteEmail.setText("");
-            family.inviteMember(inviteEmailString, this);
-            addInvite(inviteEmailString);
-        }
-    }
-
     //Verification for account deletion
     Context context = this;
     DialogInterface.OnClickListener deleteAccountPopup = new DialogInterface.OnClickListener(){
@@ -193,7 +182,16 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         }
     };
 
-
+    public void addInvite(View view){
+        String inviteEmailString = inviteEmail.getText().toString();
+        if(!functions.checkEmail(inviteEmail.getText().toString()))
+            return;
+        else {
+            inviteEmail.setText("");
+            family.inviteMember(inviteEmailString, this);
+            addInvite(inviteEmailString);
+        }
+    }
 
     public void deleteInvite(View view){
         String email = ((TextView)((TableRow)view.getParent()).getChildAt(0)).getText().toString();

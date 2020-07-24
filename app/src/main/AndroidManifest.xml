@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ViewSubjects"></activity>
+        <activity android:name=".EditSubject"></activity>
+        <activity android:name=".ViewSubjects" />
         <activity android:name=".CalendarActivity" />
         <activity android:name=".AddSubject" />
         <activity android:name=".RegisterActivity" />
@@ -27,12 +28,11 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+            android:resource="@array/preloaded_fonts" /> <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <!-- Real adMob App ID: ca-app-pub-6579091093181482~2242781779 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6579091093181482~2242781779"/>
+            android:value="ca-app-pub-6579091093181482~2242781779" />
     </application>
 
 </manifest>
