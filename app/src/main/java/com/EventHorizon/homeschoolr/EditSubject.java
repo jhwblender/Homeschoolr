@@ -75,6 +75,11 @@ public class EditSubject extends AppCompatActivity implements TaskListener{
         setStartMin();
     }
 
+    @Override
+    public void onBackPressed() {
+        doneEditing(new View(this));
+    }
+
     private void populateChildList(){
         childrenNames = new ArrayList<>();
         ArrayList<Person> members = family.getMembers(this);

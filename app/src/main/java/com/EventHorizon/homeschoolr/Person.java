@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,13 +23,15 @@ public class Person
     private String email;
     private String familyName;
     private boolean isParent;
+    private boolean isNoAccountChild;
     private boolean showAds = true;
     ArrayList<Subject> subjects;
 
-    public Person(String email, boolean isParent, String name, String familyName, boolean showAds){
+    public Person(String email, boolean isParent, String name, String familyName, boolean showAds, boolean noAccountChild){
         subjects = new ArrayList<>();
         this.email = email;
         this.isParent = isParent;
+        this.isNoAccountChild = noAccountChild;
         this.name = name;
         this.familyName = familyName;
         this.showAds = showAds;
@@ -46,6 +47,7 @@ public class Person
     public boolean getIsParent(){
         return isParent;
     }
+    public boolean getIsNoAccountChild() {return isNoAccountChild;}
     public boolean getShowAds(){return showAds;}
     public void setShowAds(boolean showAds, Context context){this.showAds = showAds; save(context);}
     public String getFamilyName(){
@@ -62,7 +64,7 @@ public class Person
     }
 
     public void deleteAccount(String email, final Context context){
-        unsave(context);
+        unsave(context, email);
         DocumentReference ref = FirebaseFirestore.getInstance().document("data/user");
         HashMap<String, Object> data = new HashMap<>();
         data.put(Functions.formatEmail2(email), FieldValue.delete());
@@ -119,6 +121,11 @@ public class Person
         SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
+    }
+    public static void unsave(Context context, String email){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(email).apply();
     }
     public static Person load(Context context, String email){
         SharedPreferences sharedPreferences = context.getSharedPreferences("User",Context.MODE_PRIVATE);

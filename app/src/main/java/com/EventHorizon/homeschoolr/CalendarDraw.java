@@ -245,7 +245,7 @@ public class CalendarDraw extends View {
     public void givePeople(Person user, ArrayList<Person> children){
         this.user = user;
         this.children = children;
-        if(!user.getIsParent()) {
+        if(user != null && !user.getIsParent()) {
             this.children = new ArrayList<>();
             this.children.add(user);
         }

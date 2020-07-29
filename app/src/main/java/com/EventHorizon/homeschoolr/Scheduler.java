@@ -16,7 +16,7 @@ public class Scheduler implements TaskListener{
 
         ArrayList<Person> members = family.getMembers(context);
         for(int i = 0; i < members.size(); i++){
-            if(!members.get(i).getIsParent()) {
+            if(members.get(i) != null && !members.get(i).getIsParent()) {
                 if(checkTimes(members.get(i)))
                     members.get(i).save(context);
             }

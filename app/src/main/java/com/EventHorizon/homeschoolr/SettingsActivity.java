@@ -19,6 +19,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SettingsActivity extends AppCompatActivity implements TaskListener {
     Auth auth;
@@ -26,14 +27,16 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
     TextView emailView;
     TextView nameView;
     TextView familyNameView;
+    TextView copyright;
     Switch adSwitch;
     boolean adChanged = false;
     TableRow enterEmailDialog;
     EditText inviteEmail;
+    EditText childName;
     String email;
     LinearLayout inviteContainer;
     LinearLayout memberContainer;
-
+    LinearLayout childrenWithoutAccountContainer;
 
     Person user;
     Family family;
@@ -59,6 +62,10 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
         functions.adInit(user);
 
+        copyright = findViewById(R.id.copyright);
+        String copyrightText = copyright.getText()+" "+Calendar.getInstance().get(Calendar.YEAR);
+        copyright.setText(copyrightText);
+
         nameView = findViewById(R.id.name);
         emailView = findViewById(R.id.email);
         familyNameView = findViewById(R.id.familyName);
@@ -66,6 +73,9 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         inviteEmail = findViewById(R.id.inviteEmail);
         inviteContainer = findViewById(R.id.inviteContainer);
         memberContainer = findViewById(R.id.memberContainer);
+        childrenWithoutAccountContainer = findViewById(R.id.childrenWithoutAccountsContainer);
+        childName = findViewById(R.id.childName);
+
         adSwitch = findViewById(R.id.adSwitch);
         adSwitch.setChecked(user.getShowAds());
 
@@ -77,6 +87,8 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         if(!family.getMember(this, auth.getEmail()).getIsParent()){
             findViewById(R.id.invitedFamilyMembersTitle).setVisibility(View.GONE);
             findViewById(R.id.invitedFamilyMembers).setVisibility(View.GONE);
+            findViewById(R.id.childrenWithoutAccountsTitle).setVisibility(View.GONE);
+            findViewById(R.id.childrenWithoutAccounts).setVisibility(View.GONE);
         }
 
         if(invited == null)
@@ -87,10 +99,10 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
 
     @Override
     public void onBackPressed() {
-        if(!adChanged)
-            super.onBackPressed();
-        else
+        if(adChanged || childrenChange)
             functions.goToActivity(CalendarActivity.class);
+        else
+            super.onBackPressed();
     }
 
     //Logout button clicked
@@ -176,6 +188,7 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
                 if(user == null)
                     Log.d("SettingsActivity","USER IS NULL!");
                 user.deleteAccount(auth.getEmail(), context); //todo fix acct deletion
+                Person.unsave(context);
                 family.removeMember(auth.getEmail(),context);
             }else
                 functions.showMessage(getString(R.string.deleteCancel),false);
@@ -193,8 +206,19 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         }
     }
 
+    public void addInvite(String email){
+        getLayoutInflater().inflate(R.layout.invite_row, inviteContainer, true);
+        ConstraintLayout layout = (ConstraintLayout) inviteContainer.getChildAt(inviteContainer.getChildCount() - 1);
+        TableRow inviteRow = (TableRow) layout.getChildAt(0);
+        ((ViewGroup)inviteRow.getParent()).removeView(inviteRow);
+        inviteContainer.addView(inviteRow);
+        TextView emailView = (TextView) inviteRow.getChildAt(0);
+        emailView.setText(email);
+    }
+
     public void deleteInvite(View view){
-        String email = ((TextView)((TableRow)view.getParent()).getChildAt(0)).getText().toString();
+        String email = ((TextView)((TableRow)view.getParent()).getChildAt(0))
+                .getText().toString();
         family.removeInvite(email, this);
         ((ViewGroup)(view.getParent().getParent())).removeView((View)view.getParent());
     }
@@ -205,24 +229,75 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
             addInvite(invited.get(i));
         }
     }
-    public void addInvite(String email){
 
-        getLayoutInflater().inflate(R.layout.invite_row, inviteContainer, true);
-        ConstraintLayout layout = (ConstraintLayout) inviteContainer.getChildAt(inviteContainer.getChildCount() - 1);
-        TableRow inviteRow = (TableRow) layout.getChildAt(0);
-        ((ViewGroup)inviteRow.getParent()).removeView(inviteRow);
-        inviteContainer.addView(inviteRow);
-        TextView emailView = (TextView) inviteRow.getChildAt(0);
-        emailView.setText(email);
+    public void addChildWithoutAccount(View view){
+        childrenChange = true;
+        String name = this.childName.getText().toString();
+        addChildWithoutAccount(name);
+        childName.setText("");
+        functions.hideKeyboard();
+        childName.clearFocus();
+        String fakeEmail = Functions.namesToFakeEmail(name, family.getFamilyName());
+        Person child = new Person(fakeEmail,false,name,family.getFamilyName()
+                ,true,true);
+        child.save(this);
+        functions.showMessage(name + " " + getString(R.string.added));
+        family.addMember(fakeEmail,this);
     }
+    public void addChildWithoutAccount(String name){
+        getLayoutInflater().inflate(R.layout.child_without_account_row
+                , childrenWithoutAccountContainer, true);
+        ConstraintLayout layout = (ConstraintLayout) childrenWithoutAccountContainer
+                .getChildAt(childrenWithoutAccountContainer.getChildCount() - 1);
+        TableRow childRow = (TableRow) layout.getChildAt(0);
+        ((ViewGroup)childRow.getParent()).removeView(childRow);
+        childrenWithoutAccountContainer.addView(childRow);
+        TextView childNameView = (TextView) childRow.getChildAt(0);
+        childNameView.setText(name);
+    }
+
+
+    Person childDeleting;
+    boolean childrenChange = false;
+    View deleteRow;
+    public void deleteChild(View view){
+        deleteRow = view;
+        String childToDelete = ((TextView)((ViewGroup)view.getParent()).getChildAt(0))
+                .getText().toString();;
+        childDeleting = family.getMemberByName(this, childToDelete);
+        if(childDeleting.getIsNoAccountChild()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getString(R.string.deleteConfirmation))
+                    .setPositiveButton(getString(R.string.yes), deleteChildPopup)
+                    .setNegativeButton(getString(R.string.no), deleteChildPopup).show();
+        }
+    }
+
+    //Verification for account deletion
+    DialogInterface.OnClickListener deleteChildPopup = new DialogInterface.OnClickListener(){
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if(which==DialogInterface.BUTTON_POSITIVE) {
+                ((ViewGroup)(deleteRow.getParent().getParent())).removeView((View)deleteRow
+                        .getParent());
+                childDeleting.deleteAccount(childDeleting.getEmail(),context);
+                family.removeMember(childDeleting.getEmail(),context);
+                childrenChange = true;
+            }else
+                functions.showMessage(getString(R.string.deleteCancel),false);
+        }
+    };
 
     public void populateMembers(){
         members = family.getMembers(this);
         for(int i = 0; i < members.size(); i++) {
-            addMember(members.get(i).getName());
+            if(members.get(i).getIsNoAccountChild())
+                addChildWithoutAccount(members.get(i).getName());
+            else
+                addMember(members.get(i).getName(), members.get(i).getIsParent());
         }
     }
-    private void addMember(String memberName){
+    private void addMember(String memberName, boolean parent){
         getLayoutInflater().inflate(R.layout.member_row, memberContainer, true);
         ConstraintLayout layout = (ConstraintLayout) memberContainer.getChildAt(memberContainer.getChildCount() - 1);
         TableRow inviteRow = (TableRow) layout.getChildAt(0);
@@ -230,13 +305,16 @@ public class SettingsActivity extends AppCompatActivity implements TaskListener 
         memberContainer.addView(inviteRow);
         TextView emailView = (TextView) inviteRow.getChildAt(0);
         emailView.setText(memberName);
+        TextView relationshipView = (TextView) inviteRow.getChildAt(1);
+        relationshipView.setText((parent)? getString(R.string.parent) : getString(R.string.child));
     }
 
     @Override
     public void authResult(TaskName result) {
         switch(result){
             case DB_DELETE_USER_SUCCESSFUL:
-                auth.deleteAccount();
+                if(!childrenChange)
+                    auth.deleteAccount();
                 break;
             case AUTH_DELETE_ACCOUNT_SUCCESSFUL:
                 functions.goToActivity(LoginActivity.class);

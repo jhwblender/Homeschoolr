@@ -38,13 +38,15 @@
     <string name="name">Name</string>
     <string name="change">Change</string>
     <string name="email">Email</string>
-    <string name="deleteConfirmation">This will delete all data associated with your account\nthis is not recoverable.\n\nAre you sure you want to continue?</string>
+    <string name="deleteConfirmation">This will delete all data associated with the account\nthis is not recoverable.\n\nAre you sure you want to continue?</string>
     <string name="adsOffConfirmation">Developing and maintaining Homeschoolr takes a lot of time and effort. By turning the ads off, you will no longer be doing your small part in helping to keep Homeschoolr happy and updated.\nAre you sure you want to turn the ads off?</string>
     <string name="adsOnThankYou">"Thank you! :) Your contribution\ndoes not go unnoticed"</string>
     <string name="about">About</string>
-    <string name="donateText">If you like what I do, consider a one time donation on Paypal. Or if you really like what I do; A monthly donation on Patreon would make me more than appreciated.\nIf you want to help out but don\'t want to pay money, consider leaving the ads on to help support Homeschoolr\'s future.</string>
+    <string name="aboutText">Due to Covid-19, the internship that was lined up for my university credit was canceled. Homeschoolr was then born in 2020 as a internship replacement project. After it was finished it continued to be developed and maintained to where it is today.</string>
+    <string name="donateText">If you like what I do, consider a one time donation on Paypal. Or if you really like what I do; A monthly donation on Patreon would be more than appreciated.\nIf you want to help out but don\'t want to pay money, consider leaving the ads on to help support Homeschoolr\'s future.</string>
+    <string name="copywrite">© Jesse Wood</string>
     <string name="support">Support</string>
-    <string name="supportText">If you need help of any kind or want to submit a bug report or suggestion; Feel free to go to our social media page or email me personally.</string>
+    <string name="supportText">If you need help of any kind or want to submit a bug report or suggestion; Feel free to go to Homeschoolr\'s social media page or email me personally.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="toggleAds">Toggle Ads</string>
@@ -53,15 +55,18 @@
     <string name="pleaseReSignIn">Please re-sign in to delete account</string>
     <string name="familySettings">Family Settings</string>
     <string name="invited">Invited Family Members</string>
-    <string name="members">Family Members</string>
+    <string name="members">Family members with accounts</string>
+    <string name="membersWithoutAccounts">Children without accounts</string>
     <string name="dummyEmail">billybob@bob.com</string>
     <string name="dummyName">Billy Bob</string>
     <string name="dummyFamilyName">The Bob\'s</string>
+    <string name="parent">Parent</string>
     <string name="invite">Invite</string>
     <string name="remove">Remove</string>
     <string name="enterEmail">Enter email</string>
     <string name="inviteEmail">Invite email</string>
     <string name="add">Add</string>
+    <string name="added"> added to the account</string>
     <string name="cancel">Cancel</string>
     <!--Authentication-->
     <string name="passwordResetGood">If this account exists\na password reset email has been sent</string>
@@ -114,4 +119,7 @@
     <string name="colon">:</string>
     <string name="seconds">Sec</string>
     <string name="timeClock">Time clock</string>
+    <!--View subjects activity-->
+    <string name="clockOutOf">Clocking out of</string>
+    <string name="clockInTo">Clocking in to</string>
 </resources>

@@ -32,6 +32,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
     ArrayList<Switch> timers;
     ArrayList<TextView> timerText;
     ArrayList<Subject> timerSubjects;
+    ArrayList<Person> timerPeople;
 
     String exportString = "";
 
@@ -46,6 +47,7 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
         timers = new ArrayList<>();
         timerText = new ArrayList<>();
         timerSubjects = new ArrayList<>();
+        timerPeople = new ArrayList<>();
 
         auth = new Auth(this);
         family = Family.load(this);
@@ -57,8 +59,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             loadChildrenSubjects();
         }else {
             loadSubjects(auth.getEmail());
-            timer();
         }
+        timer();
     }
 
     @Override
@@ -71,6 +73,9 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        for(int i = 0; i < timers.size(); i++)
+            if(timers.get(i).isChecked())
+                clockOut(i);
         functions.goToActivity(CalendarActivity.class);
     }
 
@@ -187,13 +192,12 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
             String timeStr = Scheduler.floatToHrMinSec(time);
             String timeClockString = "Time Clocked: "+timeStr;
             timeClock.setText(timeClockString);
-            timerText.add(timeClock);
             exportString += timeClockString + "\n";
 
             //Completed Button
             if(subjects.get(subject).completedChild == null)
                 subjects.get(subject).completedChild = false;
-            if(!user.getIsParent() || subjects.get(subject).completedChild) {
+            if(!user.getIsParent() || subjects.get(subject).completedChild || child.getIsNoAccountChild()) {
                 final Button completedButton = new Button(this);
                 completedButton.setText("Completed");
                 tableRow.addView(completedButton);
@@ -210,7 +214,8 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                             String lessonsCompletedString = "Lessons Completed: "+subjects
                                     .get(finalSubject).lessonsCompleted;
                             lessonsCompleted.setText(lessonsCompletedString);
-                            completedButton.setVisibility(View.GONE);
+                            if(!child.getIsNoAccountChild())
+                                completedButton.setVisibility(View.GONE);
                         }else{
                             subjects.get(finalSubject).completedChild = true;
                             completedButton.setEnabled(false);
@@ -220,23 +225,28 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
                 });
             }
 
-            if(!user.getIsParent()) {
+            if(!user.getIsParent() || child.getIsNoAccountChild()) {
                 //Timer Toggle
                 Switch timerToggle = new Switch(this);
+                timers.add(timerToggle);
+                timerPeople.add(child);
+                timerSubjects.add(subjects.get(subject));
+                timerText.add(timeClock);
                 timerToggle.setChecked(false);
                 final Context context = this;
+                final int timerIndex = timerSubjects.size() - 1;
+                //final int subjectIndex = subject;
                 timerToggle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!((Switch)v).isChecked()) {
-                            user.subjects = timerSubjects;
-                            user.save(context);
+                            clockOut(timerIndex);
+                        }else{
+                            clockIn(timerIndex);
                         }
                     }
                 });
                 tableRow.addView(timerToggle);
-                timers.add(timerToggle);
-                timerSubjects.add(subjects.get(subject));
             }
 
             theList.addView(tableRow);
@@ -253,6 +263,14 @@ public class ViewSubjects extends AppCompatActivity implements TaskListener{
 //                }
 //            });
         }
+    }
+
+    private void clockIn(final int timerIndex){
+        functions.showMessage(getString(R.string.clockInTo)+" "+timerSubjects.get(timerIndex).subjectName, false);
+    }
+    private void clockOut(final int timerIndex){
+        timerPeople.get(timerIndex).save(context);
+        functions.showMessage(getString(R.string.clockOutOf)+" "+timerSubjects.get(timerIndex).subjectName,false);
     }
 
     private void timer(){

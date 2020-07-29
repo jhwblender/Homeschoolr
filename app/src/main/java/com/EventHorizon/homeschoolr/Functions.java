@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -75,6 +76,9 @@ public class Functions {
         return email.toLowerCase().replace(".",",");
     }
     public static String formatEmail2(String email){return email.toLowerCase().replace(".",",");}
+    public static String namesToFakeEmail(String name, String familyName){
+        return (name+"@"+familyName+".homeschoolr").replace(" ","_");
+    }
 
     public boolean checkPassword(String password){
         if(password.length() > 6)
@@ -82,6 +86,17 @@ public class Functions {
         else
             showMessage(context.getString(R.string.badPasswordFormat),false);
         return false;
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = context.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(context);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void adInit(boolean show){
@@ -104,6 +119,7 @@ public class Functions {
         }
     }
     public void adInit(Person user){
-        adInit(user.getShowAds());
+        if(user != null)
+            adInit(user.getShowAds());
     }
 }

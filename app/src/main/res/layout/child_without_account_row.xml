@@ -6,15 +6,15 @@
     android:layout_height="match_parent">
 
     <TableRow
-        android:id="@+id/dummyMemberRow"
+        android:id="@+id/dummyRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15sp"
             android:layout_marginRight="15sp"
@@ -22,23 +22,13 @@
             android:text="@string/dummyName"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15sp"
-            android:layout_marginRight="15sp"
-            android:layout_weight="1"
-            android:text="@string/parent"
-            android:textAlignment="textEnd" />
-
         <Button
-            android:id="@+id/changeFamilyNameButton2"
             android:layout_width="wrap_content"
             android:layout_height="40sp"
-            android:enabled="false"
+            android:onClick="deleteChild"
             android:text="@string/remove"
             android:textColor="#FF7B00"
-            android:visibility="gone" />
+            android:visibility="visible" />
+
     </TableRow>
 </androidx.constraintlayout.widget.ConstraintLayout>

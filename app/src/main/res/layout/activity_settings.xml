@@ -33,39 +33,31 @@
             android:textSize="36sp" />
     </TableRow>
 
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="20sp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow">
+        app:layout_constraintTop_toBottomOf="@+id/divider2">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                android:id="@+id/divider2"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20sp"
-                android:background="?android:attr/listDivider" />
-
-            <TableRow
-                android:id="@+id/FamilySettings"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/familySettings"
-                    android:textSize="24sp" />
-            </TableRow>
+                android:layout_height="wrap_content"
+                android:text="@string/familySettings"
+                android:textSize="24sp" />
 
             <TableRow
                 android:id="@+id/FamilyName"
@@ -97,18 +89,11 @@
                     android:visibility="visible" />
             </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/members"
-                    android:textSize="18sp" />
-
-            </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/members"
+                android:textSize="18sp" />
 
             <TableRow
                 android:id="@+id/FamilyMembers"
@@ -135,19 +120,80 @@
 
             </TableRow>
 
+            <TextView
+                android:id="@+id/childrenWithoutAccountsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/membersWithoutAccounts"
+                android:textSize="18sp" />
+
             <TableRow
-                android:id="@+id/invitedFamilyMembersTitle"
+                android:id="@+id/childrenWithoutAccounts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <View
+                    android:layout_width="20sp"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:id="@+id/childrenWithoutAccountsContainer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/invited"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TableRow
+                        android:id="@+id/enterNameDialog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15sp"
+                            android:layout_marginRight="15sp"
+                            android:text="@string/add"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/childName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:autofillHints="email of member to invite"
+                            android:ems="10"
+                            android:hint="@string/name"
+                            android:inputType="textEmailAddress" />
+
+                        <Button
+                            android:id="@+id/changeEmailButton3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40sp"
+                            android:onClick="addChildWithoutAccount"
+                            android:text="@string/add"
+                            android:visibility="visible" />
+
+                    </TableRow>
+
+                </LinearLayout>
 
             </TableRow>
+
+            <TextView
+                android:id="@+id/invitedFamilyMembersTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/invited"
+                android:textSize="18sp" />
 
             <TableRow
                 android:id="@+id/invitedFamilyMembers"
@@ -198,11 +244,10 @@
                             android:inputType="textEmailAddress" />
 
                         <Button
-                            android:id="@+id/changeEmailButton3"
                             android:layout_width="wrap_content"
                             android:layout_height="40sp"
                             android:onClick="addInvite"
-                            android:text="@string/add"
+                            android:text="@string/invite"
                             android:visibility="visible" />
 
                     </TableRow>
@@ -296,7 +341,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -352,9 +397,9 @@
                 android:text="@string/donateText" />
 
             <TableRow
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="?android:attr/buttonBarButtonStyle">
+                android:layout_height="match_parent">
 
                 <Button
                     style="?android:attr/buttonBarButtonStyle"
@@ -364,11 +409,11 @@
                     android:onClick="paypalClicked" />
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
                     android:background="@drawable/patreon_logopng"
-                    android:onClick="patreonClicked"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:onClick="patreonClicked" />
             </TableRow>
 
             <View
@@ -410,9 +455,15 @@
                     android:onClick="mailClicked" />
             </TableRow>
 
+            <TextView
+                android:id="@+id/copyright"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/copywrite" />
+
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="90dp" />
+                android:layout_height="120sp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -125,13 +125,13 @@ public class RegisterMoreActivity extends AppCompatActivity implements TaskListe
 
     private void createUser(){
         //todo create user
-        Person user = new Person(auth.getEmail(), isParent, name, familyName, true);
+        Person user = new Person(auth.getEmail(), isParent, name, familyName, true, false);
         Family fam = new Family(familyName, auth.getEmail(), this);
         functions.goToActivity(LoginActivity.class);
     }
 
     private void addUserToFamily(){
-        Person user = new Person(auth.getEmail(), isParent, name, familyName, true);
+        Person user = new Person(auth.getEmail(), isParent, name, familyName, true, false);
         Family.download(this, familyName, this);
     }
 

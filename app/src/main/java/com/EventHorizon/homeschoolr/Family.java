@@ -57,8 +57,10 @@ public class Family {
         ArrayList<Person> members = getMembers(context);
         ArrayList<Person> children = new ArrayList<>();
         for(int i = 0; i < members.size(); i++)
-            if(!members.get(i).getIsParent())
-                children.add(members.get(i));
+            try {
+                if (!members.get(i).getIsParent())
+                    children.add(members.get(i));
+            }catch(Exception e){}
         return children;
     }
     public Person getMemberByName(Context context, String name){

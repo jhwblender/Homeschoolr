@@ -9,11 +9,11 @@ android {
         applicationId "com.EventHorizon.homeschoolr"
         minSdkVersion 21
         targetSdkVersion 29
-        versionName '2020.07.22.00'
+        versionName '2020.07.24.00'
         multiDexEnabled = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        versionCode 6
+        versionCode 7
     }
 
     buildTypes {
